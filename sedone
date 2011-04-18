@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#----------------
+#
+#---------------
+
+if [ -z $1 ]; then
+    echo "input error! Please type in file type which you want to process."
+    exit 1
+fi
+
+if [ `echo $1 | grep 'eda'` ]
+then
+    sed -n '/LCD DIPOLES/,/DONE WITH ENERGY LOCALIZATION/{/#/d;p;}' $1 > ${1%.*}.lcd
+elif[ `echo $1 | grep 'opt'` ]
+    sed -n '/LCD DIPOLES/,/DONE WITH ENERGY LOCALIZATION/{/#/d;p;}' $1 > ${1%.*}.cor
+fi

@@ -1,0 +1,46 @@
+#!/export/home/liuhui/opt/python3/bin/python3
+
+import re
+import glob
+import os
+import sys
+
+def checkdata( file_type ):
+    """
+    checkdata   the function used to check the output data is correct?
+    file_type   the file type need to check. 
+                lcd is EDA output file and contain the LCD DIPLE data.
+                cor is optimized data and contain the optimized 
+                coordiantion
+    """
+    # get current dir which the command run
+    cur_dir = os.getcwd()   
+    # use to check "******" string which contain in 
+    # incorrect EDA output file
+    reg = re.compile('(\*){5,}')   
+    
+# test:  print( file_type )
+    for lcd_file in glob.glob( cur_dir + '/*.' + file_type ):
+    # find the file whick you want to check in current dir
+        lcd  = open( lcd_file, 'r' )
+        lcd_data = lcd.readlines()
+    
+        filename = lcd_file.split('/')[-1]
+    
+        if (len(lcd_data) < 2):
+        #the file has not any data, if the length of lcd_data is 1
+            print( "---文件" + filename + "是空的!---" )
+            print( "---计算可能出错请检查输入输出文件---" )
+            print()
+        elif( len( reg.findall( ''.join(lcd_data) ) ) > 11 ):
+        # check output data is correct by find the string "****"
+            print( "---"+ filename +"计算完成！ \
+                    不过输出文件中出现＊＊＊，请注意调整---" )
+            print()
+
+if (__name__ == "__main__"):
+    if (len(sys.argv) == 1):
+        print( "---Please type in the file type which you want!---" )
+    else:
+# test:      print(sys.argv)
+        checkdata( sys.argv[1] )
