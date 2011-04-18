@@ -8,7 +8,7 @@
 # ...DONE WITH ENERGY LOCALIZATION...
 # and output the data to filename.lcd
 #********************************************************
-#echo $1
+echo $1
 if [ -z $1 ];then
 #判断是否有输入路径,如果没有输入，则查找当前路径
     filepath=.
@@ -16,11 +16,17 @@ else
     filepath=$1
 fi
 
+#echo $0
 #查找当前路径下的eda计算文件
 for filename in $filepath/*eda*.out
 do
-    sedone finename
-    echo "Have already finished ananlyzing a file, please check the data from the ${filename%.*}.lcd file."
+    echo $filename
+    $(sedone "$filename")
+    if [ $? ]; then
+        echo "Have already finished ananlyzing a file, please check the data from the ${filename%.*}.lcd file."
+    else
+        echo "Some error be found! Please Check."
+    fi
 done
 
 echo "Have already finished analyzing all data in this dirctionary, please check the lcd file"
