@@ -1,6 +1,7 @@
 #!/export/home/liuhui/opt/python3/bin/python3
 
 import re
+import sys
 import os
 import math
 
@@ -123,11 +124,11 @@ def SplitToBlock(lines):
     return result
 
 
-if __name__="__main__":
-    if (sys.argv[1]):
-        print("Error! there foundn't *.tmp file. \
-        Please Check the file exsit."
-lines = open( 'haha', 'r' ).readlines()
-
-blocks = SplitToBlock(lines)
-GenerateTable(lines)
+if __name__ == "__main__":
+    if len(sys.argv) == 1 :
+        print("Error! there foundn't *.tmp file.\n \
+                Please Check the file exsit.")
+    else:
+        lines = open( sys.argv[1] , 'r' ).readlines()
+        blocks = SplitToBlock(lines)
+        GenerateTable(lines)
