@@ -1,0 +1,58 @@
+#!/export/home/liuhui/opt/python3/bin/python3
+
+"""
+    This file combined with the script getEnergy which supply 
+    the data that come from the Gamess output file(EDA).
+"""
+
+import sys
+
+def Split(sdata):
+    """
+        Split       split the origin data to fragment 
+                    in order to handle
+            sdata   the origin data that come from script getEnergy
+
+    """
+    # the data script supplied split with \n
+    data = sdata.split('\n')
+
+    ownData = [ float(i) for i in data[1:14:2] ]
+    allData = [ float(i) for i in data[15:28:2] ]
+    return (ownData, allData)
+
+def Print(data):
+    """
+    Print       print a perfect struct data
+        data    the data need output than contain two list
+    """
+    Es = "Es".center(10)
+    Ex = "Ex".center(10)
+    Rep = "Rep".center(8)
+    Pol = "Pol".center(8)
+    Disp = "Disp".center(10)
+    E1 = "E(HF/DFT)".center(10)
+    E2 = "E(MP2)".center(10)
+
+    
+    print("Own Basis Set EDA".center(70))
+    print(Es, Ex, Rep, Pol, Disp, E1, E2)
+
+    for i in data[0]:
+        print( str( i ).center(10), end='')
+
+    print()
+    print("All Basis Set EDA".center(70))
+    print(Es, Ex, Rep, Pol, Disp, E1, E2)
+
+    for i in data[1]:
+        print( str( i ).center(10), end='')
+    print()
+
+
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        print("Input error!\nPlease enter an file name.")
+        sys.exit(1)
+    Print( Split(sys.argv[1]) )
+    sys.exit(0)
