@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if [ -z $1 ]; then
+    echo "Input error! Please enter an file name."
+    exit 1
+fi
+
+filename=$1
+sedone $filename
+if [ $?  ]; then
+    lcd_fileName="${filename%.*}.lcd"
+    checkdata $lcd_fileName
+    if [ $? ]; then
+        refine "$lcd_fileName"
+        if [ $? ]; then
+            offset "${filename%.*}.tmp"
+            #if [ $? ]; then
+            #    echo "Error! when compute offset"
+            #fi
+            getEnergy "$filename"
+            #if [ $? ]; then
+            #    echo "Error! when get energy, Please Check Gamess
+            #     output file."
+            #fi
+        else
+            echo "Refine Data error!"
+        fi
+    else
+        echo "Error! when check data."
+    fi
+else
+    echo "Some error be found when exact LCD Diple from Gamess output
+     file! Please Check Gamess output correctly."
+fi
