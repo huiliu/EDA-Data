@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ -z $1 ]; then
+    echo "Input error! Please type in filename!"
+    exit 1
+fi
+
+sed -n '/LMO CENTROIDS/, /DONE WITH ENERGY LOCALIZATION/{/#/d;p;}' $1 | sed '/LMO CENTROIDS/d' | sed '/.*DONE WITH ENERGY LOCALIZATION.*/d' > ${1%.*}.tmp
