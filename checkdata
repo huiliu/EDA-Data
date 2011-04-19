@@ -1,5 +1,9 @@
 #!/export/home/liuhui/opt/python3/bin/python3
 
+"""
+    This script used to check the data that may be optimization
+    or EDA is correct 
+"""
 import re
 import glob
 import os
@@ -22,7 +26,7 @@ def checkOne ( fName ):
         except IOError:
             print( "Open file " + fName + " error!" )
             print( "Please chech the file exist." )
-            return 0
+            sys.exit( 0 )
             
         lcd_data = lcd.readlines()
 
@@ -30,14 +34,17 @@ def checkOne ( fName ):
     
         if (len(lcd_data) < 2):
         #the file has not any data, if the length of lcd_data is 1
-            print( "---文件" + fName + "是空的!---" )
-            print( "---计算可能出错请检查输入输出文件---" )
+            print( "---File" + fName + " is empty !---" )
+            print( "---May be Gamess computed error, \
+        Please check output file---" )
             print()
+            sys.exit(0)
         elif( len( reg.findall( ''.join(lcd_data) ) ) > 11 ):
         # check output data is correct by find the string "****"
-            print( "---"+ fName +"计算完成！ \
-                    不过输出文件中出现＊＊＊，请注意调整---" )
+            print( "---"+ fName +"computed sucessfully！ \
+                    but the file contain'＊＊＊'，You modify manually---" )
             print()
+            sys.exit(0)
             lcd.close()
         else:
             print( "---File " + fName + " is normal!---" )
@@ -46,11 +53,19 @@ def checkOne ( fName ):
 
 def checkdata( file_type ):
     """
-    checkdata   the function used to check the output data is correct?
-    file_type   the file type need to check. 
-                lcd is EDA output file and contain the LCD DIPLE data.
-                cor is optimized data and contain the optimized 
-                coordiantion
+    checkdata       the function used to check the output data is 
+                    correct and complete.
+        file_type   the file type need to check. 
+                    if you want to check some type file in current,
+                    just enter the suffix of the file; and if check
+                    one file, just enter the file name.
+                    Notice:
+                        Now, the script just can check "lcd" and "cor"
+                    file, the output is error if check other file.
+
+                    "lcd" is EDA output file and contain the LCD DIPLE data.
+                    "cor" is optimized data and contain the optimized 
+                    coordiantion
     """
     if len(file_type) > 3:
         checkOne( file_type )
@@ -61,11 +76,11 @@ def checkdata( file_type ):
         for lcd_file in glob.glob( cur_dir + '/*.' + file_type ):
             # find the file whick you want to check in current dir
             filename = lcd_file.split('/')[-1]
-            if not checkOne( filename ) :
-                return 0    #error exit
-    print( "Check completely!" )
+            checkOne( filename )
+            #if not checkOne( filename ) :
+            #    return 0    #error exit
+    print( "Check completely!".center(50) )
     return 1    #normal exit
-    
 
 if (__name__ == "__main__"):
     if (len(sys.argv) == 1):
@@ -73,3 +88,4 @@ if (__name__ == "__main__"):
     else:
 # test:      print(sys.argv)
         checkdata( sys.argv[1] )
+        sys.exit(0)
