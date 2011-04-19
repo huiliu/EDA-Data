@@ -3,7 +3,20 @@
 """
     This file use to compute the offset of LCD Diple.
     You must offer the data file which contain all LMO doroids 
-    coordination and seperate every parts with bland line.
+    coordination and seperate every parts with blank line.
+
+    Group 1     Monomer 1 with own basis
+    Group 2     Monomer 2 with own basis
+    Group 3     Monomer 1 with all basis
+    Group 4     Monomer 2 with all basis
+    Group 5     super molecular with all basis
+    Group 6     Monomer 1 super molecular own basis
+    Group 7     Monomer 2 super molecular own basis
+    Group 8     MONOMER ELECTROSTATIC INTERACTION (OWN BASIS)
+    Group 9     MONOMER ELECTROSTATIC INTERACTION (ALL BASIS)
+    Group 10    MONOMER EXCHANGE-REPULSION INTERACTION (OWN BASIS)
+    Group 11    MONOMER EXCHANGE-REPULSION INTERACTION (ALL BASIS)
+
 """
 
 import re
@@ -12,15 +25,6 @@ import os
 import math
 
 
-def GenerateTable(data):
-    """
-        GenerateTable   output the origin coordination and the offset
-        Data            the all origin coordination which may be 
-                        contain eleven group.
-    """
-    blocks = SplitToBlock(data)
-    coord_r = ComputeOffset(blocks, 0, 5)
-    OutputTable(coord_r[0], coord_r[1])
 
 def OutputTable(coord, r):
     """
@@ -75,11 +79,13 @@ def GetTwoBlock(blocks, i, j):
         i               the first you need
         j               the second you need
     """
+
     if len(blocks[i]) != len(blocks[j]):
         sys.stderr.write("two block with different size")
         sys.exit(1)
 
     length = len(blocks[i])
+
     k = 0
     coord1 = []
     coord2 = []
@@ -88,6 +94,7 @@ def GetTwoBlock(blocks, i, j):
         coord1.append( blocks[i][k].strip().split() )
         coord2.append( blocks[j][k].strip().split() )
         k += 1
+    #print(coord1)
     return (coord1, coord2)
 
 def ComputeOffset(twoblock, i, j):
@@ -104,8 +111,6 @@ def ComputeOffset(twoblock, i, j):
         r.append( Distance(coordData[0][i], coordData[1][i]) )
         i += 1
     return (coordData, r)
-    #OutputOffset( r )
-    #return 1
 
 def PrintBlock(blocks):
     """
@@ -141,11 +146,60 @@ def SplitToBlock(lines):
 
     return result
 
+def GenrateOwn(coord):
+    """
+        Generateown     output the origin coordination and the offset
+        Data            the all origin coordination which may be 
+                        contain eleven group.
+    """
+    print( "------------- The own basis LCD offset ---------------" )
+    coord_r = ComputeOffset(blocks, 0, 5)
+    OutputTable(coord_r[0], coord_r[1])
+    print()
+    coord_r = ComputeOffset(blocks, 1, 6)
+    OutputTable(coord_r[0], coord_r[1])
+    #GenerateTable(coord)
+
+def GenerateReport(data):
+    """
+        GenerateReport   output the origin coordination and the offset
+        Data            the all origin coordination which may be 
+                        contain eleven group.
+    """
+    GenrateOwn(data)
+    print()
+    #GenrateAll(data)
 
 if __name__ == "__main__":
-    if len(sys.argv) == 1 :
-        print("Error! there foundn't *.tmp file.\n \
-                Please Check the file exsit.")
+    n = len(sys.argv)
+    if n == 1 :
+        print("Input error!\nPlease type in -h or --help")
+        sys.exit(1)
+    f_name = sys.argv[1]
+    if (f_name == '-h' or f_name == '--help'):
+        print(" \
+        -h --help   get help information\n \
+        filename    The coordination data that you want to compute\n \
+                    offset you can use another command(lcd refine)\n \
+                     to generate the file.\n \
+        own         compute the offset of coordination come from \n \
+                    the own basis default all\n \
+        all         compute all data. in processing.\n \
+        ")
     else:
-        lines = open( sys.argv[1] , 'r' ).readlines()
-        GenerateTable(lines)
+        try:
+            lines = open( f_name , 'r' ).readlines()
+        except IOError:
+            print( "Open the file " + f_name + " error.\n \
+                    Please check the file exsit. ")
+            sys.exit(1)
+
+        blocks = SplitToBlock(lines)
+        
+        if n == 2:
+            GenrateOwn( blocks )
+            sys.exit(0)
+        elif sys.argv[2] == "all":
+            GenerateReport(blocks)
+        else:
+            print( "Input command error! Please type in -h/ check")
