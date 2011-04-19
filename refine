@@ -6,8 +6,5 @@ if [ -z $1 ]; then
 fi
 
 sed -n '/LMO CENTROIDS/, /DONE WITH ENERGY LOCALIZATION/{/#/d;p;}' $1 | sed '/LMO CENTROIDS/d' | sed '/.*DONE WITH ENERGY LOCALIZATION.*/d' > ${1%.*}.tmp
-if [ $? ]; then
-    exit 0
-else
-    exit 1
-fi
+
+exit 0

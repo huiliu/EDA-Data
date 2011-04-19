@@ -198,5 +198,7 @@ if __name__ == "__main__":
             sys.exit(0)
         elif sys.argv[2] == "all":
             GenerateReport(blocks)
+            sys.exit(0)
         else:
             print( "Input command error! Please type in -h/ check")
+            sys.exit(1)
