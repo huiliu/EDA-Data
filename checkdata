@@ -5,6 +5,44 @@ import glob
 import os
 import sys
 
+def checkOne ( fName ):
+    """
+        CheckOne    Check one file
+    """
+    
+    # use to check "******" string which contain in 
+    # incorrect EDA output file
+    reg = re.compile('(\*){5,}')   
+    #print( fName )
+    if fName == None :
+        print( "Please Type in the file name which you want to check" )
+    else:
+        try:  
+            lcd  = open( fName, 'r' )
+        except IOError:
+            print( "Open file " + fName + " error!" )
+            return 0
+            
+        lcd_data = lcd.readlines()
+
+        #filename = fName.split('/')[-1]
+    
+        if (len(lcd_data) < 2):
+        #the file has not any data, if the length of lcd_data is 1
+            print( "---文件" + fName + "是空的!---" )
+            print( "---计算可能出错请检查输入输出文件---" )
+            print()
+        elif( len( reg.findall( ''.join(lcd_data) ) ) > 11 ):
+        # check output data is correct by find the string "****"
+            print( "---"+ fName +"计算完成！ \
+                    不过输出文件中出现＊＊＊，请注意调整---" )
+            print()
+            lcd.close()
+        else:
+            print( "---File " + fName + " is normal!---" )
+    return 1
+            
+
 def checkdata( file_type ):
     """
     checkdata   the function used to check the output data is correct?
@@ -13,30 +51,20 @@ def checkdata( file_type ):
                 cor is optimized data and contain the optimized 
                 coordiantion
     """
-    # get current dir which the command run
-    cur_dir = os.getcwd()   
-    # use to check "******" string which contain in 
-    # incorrect EDA output file
-    reg = re.compile('(\*){5,}')   
+    if len(file_type) > 3:
+        checkOne( file_type )
+    else:
+        # get current dir which the command run
+        cur_dir = os.getcwd()   
+        
+        for lcd_file in glob.glob( cur_dir + '/*.' + file_type ):
+            # find the file whick you want to check in current dir
+            filename = lcd_file.split('/')[-1]
+            if not checkOne( filename ) :
+                return 0    #error exit
+    print( "Check completely!" )
+    return 1    #normal exit
     
-# test:  print( file_type )
-    for lcd_file in glob.glob( cur_dir + '/*.' + file_type ):
-    # find the file whick you want to check in current dir
-        lcd  = open( lcd_file, 'r' )
-        lcd_data = lcd.readlines()
-    
-        filename = lcd_file.split('/')[-1]
-    
-        if (len(lcd_data) < 2):
-        #the file has not any data, if the length of lcd_data is 1
-            print( "---文件" + filename + "是空的!---" )
-            print( "---计算可能出错请检查输入输出文件---" )
-            print()
-        elif( len( reg.findall( ''.join(lcd_data) ) ) > 11 ):
-        # check output data is correct by find the string "****"
-            print( "---"+ filename +"计算完成！ \
-                    不过输出文件中出现＊＊＊，请注意调整---" )
-            print()
 
 if (__name__ == "__main__"):
     if (len(sys.argv) == 1):
