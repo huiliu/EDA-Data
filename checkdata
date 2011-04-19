@@ -21,6 +21,7 @@ def checkOne ( fName ):
             lcd  = open( fName, 'r' )
         except IOError:
             print( "Open file " + fName + " error!" )
+            print( "Please chech the file exist." )
             return 0
             
         lcd_data = lcd.readlines()

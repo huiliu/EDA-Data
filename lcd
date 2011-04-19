@@ -23,7 +23,8 @@ do
     echo $filename
     $(sedone "$filename")
     if [ $? ]; then
-        echo "Have already finished ananlyzing a file, please check the data from the ${filename%.*}.lcd file."
+        lcd_fileName="${filename%.*}.lcd"
+        echo "Have already finished ananlyzing a file, please check the data from the $lcd_fileName file."
     else
         echo "Some error be found! Please Check."
     fi
@@ -33,3 +34,9 @@ echo "Have already finished analyzing all data in this dirctionary, please check
 
 echo "Now, start to check the data! Please wait a minute."
 checkdata lcd
+refine $lcd_fileName
+if [ $? ]; then
+    echo "Refine Data error!"
+else
+    compute $lcd_fileName
+fi
