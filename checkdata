@@ -24,32 +24,32 @@ def checkOne ( fName ):
         try:  
             lcd  = open( fName, 'r' )
         except IOError:
-            print( "Open file " + fName + " error!" )
+            print( "Open file '" + fName + "' error!" )
             print( "Please chech the file exist." )
-            sys.exit( 1 )
-            
+            return 0 
+
         lcd_data = lcd.readlines()
-        datablocks = offset.SplitToBlock(lcd_data)
-        if len( datablocks ) < 22:
-            print("The data is not complete. Please Check the 'lcd' file")
-            sys.exit(1)
 
         if (len(lcd_data) < 2):
         #the file has not any data, if the length of lcd_data is 1
-            print( "---File" + fName + " is empty !---" )
-            print( "---May be Gamess computed error, \
-        Please check output file---" )
-            print()
-            sys.exit(1)
+            print( "\n---File '" + fName + "' is empty !---" )
+            print( "---May be Gamess computed error,\n \
+        Please check output file---\n" )
+            return 0
         elif( len( reg.findall( ''.join(lcd_data) ) ) > 11 ):
         # check output data is correct by find the string "****"
-            print( "---"+ fName +"computed sucessfully！\n \
-        but the file contain'＊＊＊'，You modify manually---" )
-            print()
+            print( "\n---'"+ fName +"' computed sucessfully！\n \
+        but the file contain'＊＊＊'，You modify manually---\n" )
             lcd.close()
-            sys.exit(1)
+            return 0
         else:
-            print( "---File " + fName + " is normal!---" )
+            print( "---File '" + fName + "' is normal!---" )
+
+        datablocks = offset.SplitToBlock(lcd_data)
+        if len( datablocks ) < 22:
+            print("\nThe data in '" + fName + "' is not complete. \
+            Please Check the 'lcd' file\n")
+            return 0
     return 1
             
 
@@ -70,7 +70,10 @@ def checkdata( file_type ):
                     coordiantion
     """
     if len(file_type) > 3:
-        checkOne( file_type )
+        if checkOne( file_type ) == 0:
+            sys.exit(1)
+        else:
+            sys.exit(0)
     else:
         # get current dir which the command run
         cur_dir = os.getcwd()   
@@ -90,4 +93,4 @@ if __name__ == "__main__":
     else:
 # test:      print(sys.argv)
         checkdata( sys.argv[1] )
-        sys.exit(0)
+        sys.exit( 1 )
