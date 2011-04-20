@@ -1,13 +1,13 @@
 #!/export/home/liuhui/opt/python3/bin/python3
 
-"""
-    This script used to check the data that may be optimization
+""" This script used to check the data that may be optimization
     or EDA is correct 
 """
 import re
 import glob
 import os
 import sys
+import offset
 
 def checkOne ( fName ):
     """
@@ -26,26 +26,28 @@ def checkOne ( fName ):
         except IOError:
             print( "Open file " + fName + " error!" )
             print( "Please chech the file exist." )
-            sys.exit( 0 )
+            sys.exit( 1 )
             
         lcd_data = lcd.readlines()
+        datablocks = offset.SplitToBlock(lcd_data)
+        if len( datablocks ) < 11:
+            print("The data is not complete. Please Check the 'lcd' file")
+            sys.exit(1)
 
-        #filename = fName.split('/')[-1]
-    
         if (len(lcd_data) < 2):
         #the file has not any data, if the length of lcd_data is 1
             print( "---File" + fName + " is empty !---" )
             print( "---May be Gamess computed error, \
         Please check output file---" )
             print()
-            sys.exit(0)
+            sys.exit(1)
         elif( len( reg.findall( ''.join(lcd_data) ) ) > 11 ):
         # check output data is correct by find the string "****"
-            print( "---"+ fName +"computed sucessfully！ \
-                    but the file contain'＊＊＊'，You modify manually---" )
+            print( "---"+ fName +"computed sucessfully！\n \
+        but the file contain'＊＊＊'，You modify manually---" )
             print()
-            sys.exit(0)
             lcd.close()
+            sys.exit(1)
         else:
             print( "---File " + fName + " is normal!---" )
     return 1
@@ -82,7 +84,7 @@ def checkdata( file_type ):
     print( "Check completely!".center(50) )
     return 1    #normal exit
 
-if (__name__ == "__main__"):
+if __name__ == "__main__":
     if (len(sys.argv) == 1):
         print( "---Please type in the file type which you want!---" )
     else:
