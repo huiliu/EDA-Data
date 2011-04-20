@@ -151,10 +151,12 @@ def GenrateOwn(coord):
                         contain eleven group.
     """
     print( "------------- The own basis LCD offset ---------------" )
-    coord_r = ComputeOffset(blocks, 0, 5)
+    coord_r = ComputeOffset(coord, 0, 5)
+    #coord_r = ComputeOffset(blocks, 0, 5)
     OutputTable(coord_r[0], coord_r[1])
     print()
-    coord_r = ComputeOffset(blocks, 1, 6)
+    coord_r = ComputeOffset(coord, 1, 6)
+    #coord_r = ComputeOffset(blocks, 1, 6)
     OutputTable(coord_r[0], coord_r[1])
     #GenerateTable(coord)
 
@@ -191,6 +193,7 @@ if __name__ == "__main__":
                     Please check the file exsit. ")
             sys.exit(1)
 
+        #global var
         blocks = SplitToBlock(lines)
         
         if n == 2:
