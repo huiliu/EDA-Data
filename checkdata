@@ -81,7 +81,7 @@ def checkdata( file_type ):
             checkOne( filename )
             #if not checkOne( filename ) :
             #    return 0    #error exit
-    print( "Check completely!".center(50) )
+    print( "Check completely!" )
     return 1    #normal exit
 
 if __name__ == "__main__":
