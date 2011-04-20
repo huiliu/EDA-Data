@@ -1,0 +1,163 @@
+#!/export/home/liuhui/opt/python3/bin/python3
+
+import sys
+sys.path.append("/export/home/liuhui/bin")
+import offset
+
+#Use to generate GAMESS input file which be used to compute LMOEDA
+# You Must modify some parameter such as 'scftyp', 'icharg',
+# especially "lmoeda" and so on
+EdaFile = """ $contrl scftyp=rhf runtyp=eda mplevl=2 $end
+ $contrl nprint=9 ispher=1 icharg=-1 $end
+ $SCF DIIS=.T. SOSCF=.F. DIRSCF=.T. FDIFF=.F. NPUNCH=1 $END
+ $lmoeda matom(1)=5 1 mcharg(1)=0 -1 mmult(1)=1 1 supbas=.t. $end
+ $basis gbasis=acct $end
+ $system mwords=80 memddi=800 $end
+ $data"""
+# Using to generate GAMESS input file that is used to optimize the
+# geometry. You may need modify some parameter 
+OptFile = """ $contrl scftyp=rhf runtyp=optimize mplevl=2 $end
+ $contrl nprint=9 ispher=1 icharg=-1 $end
+ $STATPT nstep=200 $end
+ $basis gbasis=accq $end
+ $system mwords=80 memddi=200 $end
+ $data"""
+FixOpt = """ $contrl scftyp=rhf runtyp=optimize mplevl=2 $end
+ $contrl ispher=1 icharg=-1 $end
+ $basis gbasis=acct $end
+ $statpt nstep=200 ifreez(1)=13 14 15 16 17 18 $end
+ $SCF DIIS=.T. SOSCF=.F. DIRSCF=.T. FDIFF=.F. NPUNCH=1 $END
+ $guess guess=moread norb=262 $end
+ $system mwords=80 memddi=200 $end
+ $data"""
+
+AIMFile = """ """
+NBOFile = """ """
+
+
+
+def GenerateFile( filename ):
+    try:
+        f = open( filename, 'r' ).readlines()
+    except IOError:
+        print( "Failed open the file '" + sys.argv[1] + "'." ) 
+        print( "Please check it exsit!" )
+        sys.exit(1)
+    
+    data = offset.SplitToBlock( f )
+    length = len( data )
+    fName = GenerateFileName( data[0], length - 1 )
+    fType = fName[-1]
+
+    i = 1
+    while i < length:
+        WriteToFile( fName[i-1], data[i], fType )
+        i += 1
+
+    sys.exit(0)
+
+def MergeData( lData ):
+    data = ""
+    for d in lData:
+        data += d
+    return data
+            
+
+def WriteToFile( fName, data, f_type ):
+    # Write EDA input file.
+    try:
+        outputFile = open( fName, 'w' )
+    except IOError:
+        print("Failed to Create file.")
+        sys.exit(1)
+
+    data = MergeData(data)
+    if f_type == "eda":
+        try:
+            outputFile.write(EdaFile)
+            outputFile.write("Title: " + fName + "\nC1\n")
+            outputFile.write(data + " $end")
+            outputFile.close()
+        except IOError:
+            print("Failed to write data.")
+            sys.exit(1)
+    elif f_type == "opt":
+        try:
+            outputFile.write(OptFile)
+            outputFile.write("Title: " + fName + "\nC1\n")
+            outputFile.write(data + " $end")
+            outputFile.close()
+        except IOError:
+            print("Failed to write data.")
+            sys.exit(1)
+    elif f_type == "fixopt":
+        try:
+            outputFile.write(FixOpt)
+            outputFile.write("Title: " + fName + "\nC1\n")
+            outputFile.write(data + " $end")
+            outputFile.close()
+        except IOError:
+            print("Failed to write data.")
+            sys.exit(1)
+    elif f_type == "aim":
+        print("This Function is under develpment")
+        sys.exit(1)
+        try:
+            outputFile.write(FixOpt)
+            outputFile.write("Title: " + fName + "\nC1\n")
+            outputFile.write(data + " $end")
+            outputFile.close()
+        except IOError:
+            print("Failed to write data.")
+            sys.exit(1)
+    elif f_type == "nbo":
+        print("This Function is under develpment")
+        sys.exit(1)
+        try:
+            outputFile.write(FixOpt)
+            outputFile.write("Title: " + fName[i-1] + "\nC1\n")
+            outputFile.write(data[i] + " $end")
+            outputFile.close()
+        except IOError:
+            print("Failed to write data.")
+            sys.exit(1)
+    else:
+        print("I am not God! I cann't generate this type of file.")
+                
+def GenerateFileName( fileInfo, k ):
+    """
+        GenerateFileName        generate the file name
+            fileInof            contain some information that use to
+                                generate file name
+                                "Prefix startNum EndNum StepNum 
+                                Operate(eda/opt/aim/nbo) suffix"
+    """
+    tmp = fileInfo[0]
+    Info = tmp.split(" ")
+    if len(Info) != 6:
+        print( "Yun Input File has error! Please check it." )
+        sys.exit(1)
+    else:
+        Name = []
+
+        suffix = Info[-1][:3]
+        start = int(Info[1])
+        end = int(Info[2])
+        step = int(Info[3])
+
+        if k != int(( end - start ) / step + 1):
+            print("The input File have error. Please check it.")
+            sys.exit(1)
+
+        for x in range(start, end + 1, step):
+            Name.append( Info[0] + str(x) + "-" + Info[4] + \
+         "." + suffix)
+
+        Name.append( Info[4] )
+    return Name
+        
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        print(" generate <filename>")
+    else:
+        GenerateFile( sys.argv[1] )
