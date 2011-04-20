@@ -10,7 +10,6 @@
 #********************************************************
 echo $1
 if [ -z $1 ];then
-#判断是否有输入路径,如果没有输入，则查找当前路径
     filepath=.
 else
     filepath=$1
@@ -23,6 +22,4 @@ do
     singleEda "$filename"
 done
 
-echo "Have already finished analyzing all data in this dirctionary, please check the lcd file"
-
-echo "Now, start to check the data! Please wait a minute."
+echo "Have analyzed all data in this directory, please check the lcd file"

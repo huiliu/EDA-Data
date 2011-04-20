@@ -182,7 +182,7 @@ if __name__ == "__main__":
                     offset you can use another command(lcd refine)\n \
                      to generate the file.\n \
         own         compute the offset of coordination come from \n \
-                    the own basis default all\n \
+                    the own basis . default own\n \
         all         compute all data. in processing.\n \
         ")
     else:
