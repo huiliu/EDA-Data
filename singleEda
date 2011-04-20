@@ -6,29 +6,16 @@ if [ -z $1 ]; then
 fi
 
 filename=$1
-sedone $filename
-if [ $?  ]; then
+echo "--------------------------------$filename----------------------------"
+if sedone $filename; then
     lcd_fileName="${filename%.*}.lcd"
-    checkdata $lcd_fileName
-    if [ $? ]; then
-        refine "$lcd_fileName"
-        if [ $? ]; then
+    #echo chechdata $?
+    if checkdata "$lcd_fileName"; then
+        if refine "$lcd_fileName"; then
             offset "${filename%.*}.tmp"
-            #if [ $? ]; then
-            #    echo "Error! when compute offset"
-            #fi
             getEnergy "$filename"
-            #if [ $? ]; then
-            #    echo "Error! when get energy, Please Check Gamess
-            #     output file."
-            #fi
         else
             echo "Refine Data error!"
         fi
-    else
-        echo "Error! when check data."
     fi
-else
-    echo "Some error be found when exact LCD Diple from Gamess output
-     file! Please Check Gamess output correctly."
 fi
