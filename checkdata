@@ -30,7 +30,7 @@ def checkOne ( fName ):
             
         lcd_data = lcd.readlines()
         datablocks = offset.SplitToBlock(lcd_data)
-        if len( datablocks ) < 11:
+        if len( datablocks ) < 22:
             print("The data is not complete. Please Check the 'lcd' file")
             sys.exit(1)
 
