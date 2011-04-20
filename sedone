@@ -8,10 +8,10 @@ if [ -z $1 ]; then
     exit 1
 fi
 if [ `echo $1 | grep 'eda'` ]; then
-    echo "Exact Eda Data Successfully! "
+    echo "Extract Eda Data Successfully! "
     sed -n '/LCD DIPOLES/,/DONE WITH ENERGY LOCALIZATION/{/#/d;p;}' $1 > ${1%.*}.lcd
 elif [ `echo $1 | grep 'opt'` ]; then
-    echo "Exact Optimized Coordination Successfully!"
+    echo "Extract Optimized Coordination Successfully!"
     sed -n '/LCD DIPOLES/,/DONE WITH ENERGY LOCALIZATION/{/#/d;p;}' $1 > ${1%.*}.cor
 fi
 exit 0
