@@ -9,15 +9,15 @@
 # and output the data to filename.lcd
 #********************************************************
 #echo $1
-i=$1
-i_end=$(( 5 + i ))
-echo $i_end
+#i=$1
+#i_end=$(( 5 + i ))
+#echo $i_end
 
-if [ -z $2 ];then
+if [ -z $1 ];then
 #判断是否有输入路径,如果没有输入，则查找当前路径
     filepath=.
 else
-    filepath=$2
+    filepath=$1
 fi
 
 #查找当前路径下的eda计算文件
@@ -25,7 +25,7 @@ for filename in $filepath/*opt*.out
 do
     sedone $filename
     echo "Have ananlyzed a file, please check the data in the \"${filename%.*}.cor\" file."
-    checkdata $filename
+    checkdata ${filename%.*}.cor
 done
 
 echo "Have analyzed all data in this directory, please check the cor file"
