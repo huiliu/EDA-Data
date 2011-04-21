@@ -13,43 +13,47 @@ def checkOne ( fName ):
     """
         CheckOne    Check one file
     """
-    
     # use to check "******" string which contain in 
     # incorrect EDA output file
     reg = re.compile('(\*){5,}')   
     #print( fName )
-    if fName == None :
-        print( "Please Type in the file name which you want to check" )
+    try:  
+        lcd  = open( fName, 'r' )
+    except IOError:
+        print( "Open file '" + fName + "' error!" )
+        print( "Please chech the file exist." )
+        sys.exit(1)
+
+    lcd_data = lcd.readlines()
+
+    if (len(lcd_data) < 2):
+    #the file has not any data, if the length of lcd_data is 1
+        print( "\n---File '" + fName + "' is empty !---" )
+        print( "---May be Gamess computed error,\n \
+    Please check output file---\n" )
+        sys.exit(1)
+    elif( len( reg.findall( ''.join(lcd_data) ) ) > 11 ):
+    # check output data is correct by find the string "****"
+        print( "\n---'"+ fName +"' computed sucessfully！\n \
+    but the file contain'＊＊＊'，You modify manually---\n" )
+        lcd.close()
+        sys.exit(1)
     else:
-        try:  
-            lcd  = open( fName, 'r' )
-        except IOError:
-            print( "Open file '" + fName + "' error!" )
-            print( "Please chech the file exist." )
-            return 0 
+        print( "---File '" + fName + "' is normal!---" )
 
-        lcd_data = lcd.readlines()
+    datablocks = offset.SplitToBlock(lcd_data)
+    
+    if fName.find('eda') != -1:    
+        i = 22
+        suffix = 'lcd'
+    elif fName.find('opt') != -1:
+        i = 0
+        suffix = 'cor'
 
-        if (len(lcd_data) < 2):
-        #the file has not any data, if the length of lcd_data is 1
-            print( "\n---File '" + fName + "' is empty !---" )
-            print( "---May be Gamess computed error,\n \
-        Please check output file---\n" )
-            return 0
-        elif( len( reg.findall( ''.join(lcd_data) ) ) > 11 ):
-        # check output data is correct by find the string "****"
-            print( "\n---'"+ fName +"' computed sucessfully！\n \
-        but the file contain'＊＊＊'，You modify manually---\n" )
-            lcd.close()
-            return 0
-        else:
-            print( "---File '" + fName + "' is normal!---" )
-
-        datablocks = offset.SplitToBlock(lcd_data)
-        if len( datablocks ) < 22:
-            print("\nThe data in '" + fName + "' is not complete. \
-            Please Check the 'lcd' file\n")
-            return 0
+    if len( datablocks ) < i:
+        print("\nThe data in '" + fName + "' is not complete. \
+        Please Check the '" + suffix + "' file\n")
+        sys.exit(1)
     return 1
             
 
@@ -70,10 +74,10 @@ def checkdata( file_type ):
                     coordiantion
     """
     if len(file_type) > 3:
-        if checkOne( file_type ) == 0:
-            sys.exit(1)
-        else:
-            sys.exit(0)
+        checkOne( file_type )
+    elif file_type == None:
+        print( "Please Type in the file name which you want to check" )
+        sys.exit(1)
     else:
         # get current dir which the command run
         cur_dir = os.getcwd()   
@@ -82,8 +86,7 @@ def checkdata( file_type ):
             # find the file whick you want to check in current dir
             filename = lcd_file.split('/')[-1]
             checkOne( filename )
-            #if not checkOne( filename ) :
-            #    return 0    #error exit
+
     print( "Check completely!" )
     return 1    #normal exit
 
