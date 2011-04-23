@@ -25,6 +25,19 @@ def checkOne ( fName ):
         sys.exit(1)
 
     lcd_data = lcd.readlines()
+    datablocks = offset.SplitToBlock(lcd_data)
+    
+    if fName.find('eda') != -1:    
+        i = 22
+        suffix = 'lcd'
+    elif fName.find('opt') != -1:
+        i = 0
+        suffix = 'cor'
+
+    if len( datablocks ) < i:
+        print("\nThe data in '" + fName + "' is not complete. \
+        Please Check the '" + suffix + "' file\n")
+        sys.exit(1)
 
     if (len(lcd_data) < 2):
     #the file has not any data, if the length of lcd_data is 1
@@ -40,23 +53,7 @@ def checkOne ( fName ):
         sys.exit(1)
     else:
         print( "---File '" + fName + "' is normal!---" )
-        return  1
-
-    datablocks = offset.SplitToBlock(lcd_data)
-    
-    if fName.find('eda') != -1:    
-        i = 22
-        suffix = 'lcd'
-    elif fName.find('opt') != -1:
-        i = 0
-        suffix = 'cor'
-
-    if len( datablocks ) < i:
-        print("\nThe data in '" + fName + "' is not complete. \
-        Please Check the '" + suffix + "' file\n")
-        sys.exit(1)
-    return 1
-            
+        sys.exit(0)
 
 def checkdata( file_type ):
     """
@@ -97,4 +94,3 @@ if __name__ == "__main__":
     else:
 # test:      print(sys.argv)
         checkdata( sys.argv[1] )
-        sys.exit( 1 )
