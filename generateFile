@@ -73,6 +73,7 @@ def CheckTitle( data, num):
     if len(d) < num:
         print("You input file has error! Please Check it.")
         sys.exit(1)
+    return d
 
 def GenerateFileName( fileInfo, k ):
     """
@@ -86,7 +87,7 @@ def GenerateFileName( fileInfo, k ):
     Name = []
 
     tmp = fileInfo[0]
-    CheckTitle( tmp, 6 )
+    Info = CheckTitle( tmp, 6 )
 
     suffix = Info[-1][:3]
     start = int(Info[1])
