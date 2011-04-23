@@ -1,7 +1,6 @@
 #!/export/home/liuhui/opt/python3/bin/python3
 
 import sys
-sys.path.append("/export/home/liuhui/bin")
 import offset
 
 #This var use to store the file head part
@@ -14,8 +13,6 @@ def GenerateFile( filename ):
             filename        the name of template file. the structure 
                             of this file:
                             e.g.
-                            
-
     """
     try:
         f = open( filename, 'r' ).readlines()
@@ -25,7 +22,7 @@ def GenerateFile( filename ):
         sys.exit(1)
     
     data = offset.SplitToBlock( f )
-    FileHead = MergeData(data[1])
+    FileHead = data[1]
     length = len( data )
     fName = GenerateFileName( data[0], length - 2 )
     fType = fName[-1]
@@ -37,24 +34,14 @@ def GenerateFile( filename ):
 
     sys.exit(0)
 
-def MergeData( lData ):
-    """
-        MergeData       merge the items in list
-                lData   a list
-    """
-    data = ""
-    for d in lData:
-        data += d
-    return data
-            
-
 def fWrite( f, head, name, data, end ):
     """
 
     """
     try:
-        f.write( head )
-        f.write(data + end )
+        f.writelines( head )
+        f.writelines(data) 
+        f.write(end)
         f.close()
     except IOError:
         print("Failed to write data.")
@@ -71,8 +58,6 @@ def WriteToFile( fName, fHead, data, f_type ):
         print("Failed to Create file.")
         sys.exit(1)
 
-    #Because the file be read by lines and stored in a List
-    data = MergeData(data)
     #Need to Modify, we just judge create GAMESS or GAUSSIAN input file
     if f_type == "gms":
         fWrite(outputFile, fHead, fName, data, " $end")
@@ -83,6 +68,12 @@ def WriteToFile( fName, fHead, data, f_type ):
     I just can generate GAMESS or GAUSSIAN input file.")
         sys.exit(1)
                 
+def CheckTitle( data, num):
+    d = data.split(" ")
+    if len(d) < num:
+        print("You input file has error! Please Check it.")
+        sys.exit(1)
+
 def GenerateFileName( fileInfo, k ):
     """
         GenerateFileName        generate the file name
@@ -92,28 +83,25 @@ def GenerateFileName( fileInfo, k ):
                                 filetype(gms/gau) suffix"
             k                   the number of coordination group
     """
+    Name = []
+
     tmp = fileInfo[0]
-    Info = tmp.split(" ")
-    if len(Info) != 6:
-        print( "Yun Input File has error! Please check it." )
+    CheckTitle( tmp, 6 )
+
+    suffix = Info[-1][:3]
+    start = int(Info[1])
+    end = int(Info[2])
+    step = int(Info[3])
+
+    if k != int(( end - start ) / step + 1):
+        print("The input File have error. Please check it.")
         sys.exit(1)
-    else:
-        Name = []
 
-        suffix = Info[-1][:3]
-        start = int(Info[1])
-        end = int(Info[2])
-        step = int(Info[3])
+    for x in range(start, end + 1, step):
+        Name.append( Info[0] + str(x) + "-" + Info[4] + \
+     "." + suffix)
 
-        if k != int(( end - start ) / step + 1):
-            print("The input File have error. Please check it.")
-            sys.exit(1)
-
-        for x in range(start, end + 1, step):
-            Name.append( Info[0] + str(x) + "-" + Info[4] + \
-         "." + suffix)
-
-        Name.append( Info[4] )
+    Name.append( Info[4] )
     return Name
         
 if __name__ == "__main__":
