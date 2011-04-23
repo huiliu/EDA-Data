@@ -34,7 +34,7 @@ def Print(data):
     E1 = "E(HF/DFT)".center(10)
     E2 = "E(MP2)".center(10)
 
-    
+    print ("-"*70)
     print("Own Basis Set EDA".center(70))
     print(Es, Ex, Rep, Pol, Disp, E1, E2)
 
