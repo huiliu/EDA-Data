@@ -35,11 +35,12 @@ def checkOne ( fName ):
     elif( len( reg.findall( ''.join(lcd_data) ) ) > 11 ):
     # check output data is correct by find the string "****"
         print( "\n---'"+ fName +"' computed sucessfully！\n \
-    but the file contain'＊＊＊'，You modify manually---\n" )
+    but the file contain'*****', You need modify manually---\n" )
         lcd.close()
         sys.exit(1)
     else:
         print( "---File '" + fName + "' is normal!---" )
+        return  1
 
     datablocks = offset.SplitToBlock(lcd_data)
     
