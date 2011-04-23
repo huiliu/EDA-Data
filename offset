@@ -119,13 +119,13 @@ def PrintBlock(blocks):
             sys.stdout.write(line)
         sys.stdout.write('\n')
 
-def SplitToBlock(lines):
+def SplitToBlock(lines, regular='^\s*$'):
     """
         SplitToBlock    split the data file to block which is easy to 
                         process.
         lines           the data that is conpoud
     """
-    reg = re.compile('^\s*$')
+    reg = re.compile(regular)
     result = []
     block = []
     i = 0
@@ -150,7 +150,7 @@ def GenrateOwn(coord):
         Data            the all origin coordination which may be 
                         contain eleven group.
     """
-    print( "------------- The own basis LCD offset ---------------" )
+    print( "-" * 77 )
     coord_r = ComputeOffset(coord, 0, 5)
     #coord_r = ComputeOffset(blocks, 0, 5)
     OutputTable(coord_r[0], coord_r[1])
