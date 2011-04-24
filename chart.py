@@ -3,19 +3,26 @@
 import sys
 import offset
 import matrix
-import pprint
+import common
 
 
 def generateJS( js, fname ):
+    """
+        generateJS      produce JavaScript file which use to generate
+                        Chart.
+            js          The offset coordination that have transpose to
+                        js formation.
+    """
     end = '\n\t\t});\t\n});'
     ftemplate = open('/export/home/liuhui/script/data_template.js', 'r').readlines()
     
     Js = js + end
 
     f = open( fname, 'w' )
-    f.writelines(ftemplate)
-    f.write( Js )
+        f.writelines(ftemplate)
+        f.write( Js )
     f.close()
+
     print("generate JavaScript sucessfully!")
 
 
@@ -32,28 +39,21 @@ def ChartData( data ):
     return section
 
 def ReadData( fName = '/tmp/chartdata' ):
-    try:
-        fData = open( fName, 'r').readlines()
-    except IOError:
-        print( "Failed to Read Data! Please Chech the file exsit." )
-        sys.exit(1)
+    """
+        ReadData        read offset data from file
+    """
+    blocks = common.ReadDataFromFile( fName )
 
-    blocks = offset.SplitToBlock( fData )
-
-    if len(blocks) % 2 != 0:
-    #because the supermolecular was divided into two parts, so the 
-    #data would be pairs.
-        print( "The data may be have some errors. Please check it." )
-        sys.exit(1)
     return blocks
     
 def FormatOutput( data ):
     """
-        """
+        FormatOutput        make the output information is perfect.
+            data            a list
+    """
     nColumn = len(data[0])
     nRow = len(data)
-#pprint.pprint(data) 
-#print( "fr=%d, fc=%d"%(nRow, nColumn) )
+
     i = 0
     oData = []
     while i < nRow:
@@ -64,17 +64,25 @@ def FormatOutput( data ):
     return oData
         
 def HandleData(bData):
+    """
+        HandleData      transpose the input data to a matrix
+            bData       a List
+    """
 
     nColumn = len(bData)
     i = 0
     data = []
+
     while i < nColumn:
-        mono1 = ','.join(x for x in bData[i]).replace('\n','')
-        mono2 = ','.join(x for x in bData[i+1]).replace('\n','')
+        one =  bData[i].split('   ')
+        one[-1] = one[-1][:-1]
 #Shit! forgot add a comma, Waste plenty of time to debug.
-        one = (mono1 + ','+ mono2).split(',')
-        data.append( one )
-        i += 2
+        data.append( one[1:] )
+        i += 1
+
+    #check the data, 
+    if len(data[0]) != len(data[1]):
+        print("The Data May be not completely! Please Check it.")
 
     return data
 
@@ -85,24 +93,8 @@ if __name__ == "__main__":
         print("Input error!")
         print( "chart [-w | datafile] distfile " ) 
         sys.exit(1)
-#    para = sys.argv[1]
-#    datafile = ''
+
     distfile = 'OffsetChart'
-#    blocks = ''
-#    if n == 2:
-#        distfile = sys.argv[1] 
-#        blocks =  ReadData()
-#    elif para == "-w" and len(sys.argv) == 2:
-#        distfile = sys.argv[2]
-#        blocks =  ReadData()
-#    elif len(sys.argv) == 3 and para == "-w":
-#        datafile = sys.argv[1]
-#        distfile = sys.argv[2]
-#        blocks =  ReadData(datafile)
-#    else:
-#        print("Input error!")
-#        print( "chart [-w | datafile] distfile " ) 
-#        sys.exit(1)
 
     blocks =  ReadData(sys.argv[1])
     wData = HandleData(blocks)
@@ -110,6 +102,8 @@ if __name__ == "__main__":
     oData = FormatOutput(transData)
     chart = ChartData(oData)
     generateJS( chart, distfile + '.js' )
-    f = open( distfile , 'w')
-    f.writelines(repr(transData))
+
+    #produce a file that contain offset data used to check
+    f = open( distfile + '.dat', 'w' )
+        f.writelines(repr(transData))
     f.close()

@@ -4,7 +4,7 @@
 #
 #---------------
 if [ -z $1 ]; then
-    echo "input error! Please type in file type which you want to process."
+    echo "input error! Please type in file name which you want to process."
     exit 1
 fi
 if [ `echo $1 | grep 'eda'` ]; then

@@ -48,11 +48,10 @@ def OutputOffset(offset):
     OutputOffset    only output the offset
                     this function does not use
     """
-    i = 0
-    length = len(offset)
-    while i < length:
-        print( "%11.6f" % offset[i] )
-        i += 1
+    offsetData = ''
+    for x in offset:
+        offsetData += str(format(x, "11.6f"))
+    return offsetData
 
 def Distance(coord1, coord2):
     """
@@ -144,40 +143,41 @@ def SplitToBlock(lines, regular='^\s*$'):
 
     return result
 
-def GenrateOwn(coord):
+def GenrateReport(coord, output_type='-s'):
     """
         Generateown     output the origin coordination and the offset
         Data            the all origin coordination which may be 
                         contain eleven group.
     """
-    print( "-" * 77 )
-    coord_r = ComputeOffset(coord, 0, 5)
-    #coord_r = ComputeOffset(blocks, 0, 5)
-    OutputTable(coord_r[0], coord_r[1])
-    print()
-    coord_r = ComputeOffset(coord, 1, 6)
-    #coord_r = ComputeOffset(blocks, 1, 6)
-    OutputTable(coord_r[0], coord_r[1])
-    #GenerateTable(coord)
+    
+    coord_r1 = ComputeOffset(coord, 0, 5)
+    coord_r2 = ComputeOffset(coord, 1, 6)
 
-def GenerateReport(data):
-    """
-        GenerateReport   output the origin coordination and the offset
-        Data            the all origin coordination which may be 
-                        contain eleven group.
-    """
-    GenrateOwn(data)
-    #GenrateAll(data)
+    if output_type == '-s':
+        print( "-" * 77 )
+        OutputTable(coord_r1[0], coord_r1[1])
+        print()
+        OutputTable(coord_r2[0], coord_r2[1])
+    else:
+        print( OutputOffset( coord_r1[1] ) + OutputOffset( coord_r2[1] ) )
 
 if __name__ == "__main__":
+
     n = len(sys.argv)
+
     if n == 1 :
         print("Input error!\nPlease type in -h or --help")
         sys.exit(1)
-    f_name = sys.argv[1]
-    if (f_name == '-h' or f_name == '--help'):
+
+    para1 = sys.argv[1]
+
+    if n == 2 and (para1 == '-h' or para1 == '--help'):
         print(" \
+        offset [-c | -s ] filename [own | all]\n \
         -h --help   get help information\n \
+        -c          output chartdata(only offset data)\n \
+        -s          output summary data(contain origin coord and \n \
+                    offset data\n \
         filename    The coordination data that you want to compute\n \
                     offset you can use another command(lcd refine)\n \
                      to generate the file.\n \
@@ -185,23 +185,28 @@ if __name__ == "__main__":
                     the own basis . default own\n \
         all         compute all data. in processing.\n \
         ")
-    else:
+    elif n == 2 and (para1 != '-h' or para1 != '--help'):
+        print("Error parameter! Please type in -h check.")
+        sys.exit(1)
+    elif n == 3:
+        f_name = sys.argv[2]
+
         try:
             lines = open( f_name , 'r' ).readlines()
         except IOError:
             print( "Open the file " + f_name + " error.\n \
                     Please check the file exsit. ")
-            sys.exit(1)
 
-        #global var
         blocks = SplitToBlock(lines)
-        
-        if n == 2:
-            GenrateOwn( blocks )
+
+        if para1 == '-s':
+            GenrateReport( blocks )
             sys.exit(0)
-        elif sys.argv[2] == "all":
-            GenerateReport(blocks)
+        elif para1 == '-c':
+            GenrateReport( blocks, para1 )
             sys.exit(0)
         else:
-            print( "Input command error! Please type in -h/ check")
+            print("Error parameter! Please type in -h check.")
             sys.exit(1)
+    else:
+        print( "The features is under develop." )    

@@ -25,11 +25,11 @@ if sedone $filename; then
     if refine "$lcd_fileName"; then
         if [ $x -eq 0 ]; then
         # Output Summary
-            offset "${filename%.*}.tmp"
+            offset -s "${filename%.*}.tmp"
             getEnergy "$filename"
         else
         # Output Result to file LCD and Energy
-            offset "${filename%.*}.tmp">>LCD
+            offset -c "${filename%.*}.tmp">>LCD
             getEnergy "$filename">>Energy
         fi
     else
