@@ -7,3 +7,4 @@ if [ -z $1 ];then
 fi
 
 awk '{print $7}' $1 |sed '1d'>/tmp/chartdata
+echo '' >> /tmp/chartdata
