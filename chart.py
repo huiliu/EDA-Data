@@ -14,13 +14,13 @@ def generateJS( js, fname ):
                         js formation.
     """
     end = '\n\t\t});\t\n});'
-    ftemplate = open('/export/home/liuhui/script/data_template.js', 'r').readlines()
+    ftemplate = open('data_template.js', 'r').readlines()
     
     Js = js + end
 
     f = open( fname, 'w' )
-        f.writelines(ftemplate)
-        f.write( Js )
+    f.writelines(ftemplate)
+    f.write( Js )
     f.close()
 
     print("generate JavaScript sucessfully!")
@@ -31,7 +31,7 @@ def ChartData( data ):
     section = 'series: ['
     i = 0 
     for d in data:
-        section = section + "{\nname: '" + name + str(i) + \
+        section = section + "{\nvisiable: false,\nname: '" + name + str(i) + \
     "',\ndata: [" + data[i] + "]\n}, "
         i += 1
     section = section[:-2] + ']'
@@ -105,5 +105,5 @@ if __name__ == "__main__":
 
     #produce a file that contain offset data used to check
     f = open( distfile + '.dat', 'w' )
-        f.writelines(repr(transData))
+    f.writelines(repr(transData))
     f.close()
