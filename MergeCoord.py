@@ -2,18 +2,16 @@
 
 import glob
 import sys
+import common
 
 def merge():
 
-    fDist = open('all_coordination.cor', 'w')
+    fDist = open('all_coordination', 'w')
+
     for fName in glob.glob('./*.cor'):
-        try:
-            f = open(fName, 'r')
-        except IOError:
-            print("Failed to Open '" + fName + "'")
-            sys.exit(1)
-        fData = f.readlines()
+        fData = common.ReadDataFromFile( fName )
         if len(fData) != 0:
+            print( fName )
             fDist.write(fName[2:] + "\n")
             fDist.writelines(fData)
         else:
