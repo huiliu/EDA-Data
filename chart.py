@@ -14,7 +14,7 @@ def generateJS( js, fname ):
                         js formation.
     """
     end = '\n\t\t});\t\n});'
-    ftemplate = open('data_template.js', 'r').readlines()
+    ftemplate = open('/export/home/liuhui/bin/data_template.js', 'r').readlines()
     
     Js = js + end
 
@@ -31,7 +31,7 @@ def ChartData( data ):
     section = 'series: ['
     i = 0 
     for d in data:
-        section = section + "{\nvisiable: false,\nname: '" + name + str(i) + \
+        section = section + "{\nvisible: false,\nname: '" + name + str(i) + \
     "',\ndata: [" + data[i] + "]\n}, "
         i += 1
     section = section[:-2] + ']'
