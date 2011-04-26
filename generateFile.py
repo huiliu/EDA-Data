@@ -89,18 +89,22 @@ def GenerateFileName( fileInfo, k ):
     tmp = fileInfo[0]
     Info = CheckTitle( tmp, 6 )
 
-    suffix = Info[-1][:3]
+    suffix = ""
     start = int(Info[1])
     end = int(Info[2])
     step = int(Info[3])
+
+    if Info[4] == 'gms':
+        suffix = '.inp'
+    elif Info[4] == 'gau' :
+        suffix = '.com'
 
     if k != int(( end - start ) / step + 1):
         print("The input File have error. Please check it.")
         sys.exit(1)
 
     for x in range(start, end + 1, step):
-        Name.append( Info[0] + str(x) + "-" + Info[4] + \
-     "." + suffix)
+        Name.append( Info[0] + str(x) + "-" + Info[5][:3] + suffix)
 
     Name.append( Info[4] )
     return Name
