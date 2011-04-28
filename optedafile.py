@@ -1,7 +1,7 @@
 #!/export/home/liuhui/opt/python3/bin/python3
 
 import sys
-import offset
+import common
 import generateFile
 
 
@@ -10,7 +10,7 @@ def GenerateFile( fData ):
     """
 
         """
-    data = offset.SplitToBlock( fData )
+    data = common.SplitToBlock( fData )
     fInfo = data[0][0]
     fHead = data[1]
 

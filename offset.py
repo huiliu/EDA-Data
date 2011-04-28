@@ -23,6 +23,7 @@ import re
 import sys
 import os
 import math
+import common       #The file contain some function that often be used
 
 def OutputTable(coord, r):
     """
@@ -118,31 +119,6 @@ def PrintBlock(blocks):
             sys.stdout.write(line)
         sys.stdout.write('\n')
 
-def SplitToBlock(lines, regular='^\s*$'):
-    """
-        SplitToBlock    split the data file to block which is easy to 
-                        process.
-        lines           the data that is conpoud
-    """
-    reg = re.compile(regular)
-    result = []
-    block = []
-    i = 0
-    length = len(lines)
-
-    while i < length:
-        if reg.match(lines[i]) is None:
-            block.append(lines[i])
-            i += 1
-        else:
-            if block != []:
-                result.append(block)
-            while i < length and reg.match(lines[i]) :
-                i += 1
-            block = []
-
-    return result
-
 def GenrateReport(coord, output_type='-s'):
     """
         Generateown     output the origin coordination and the offset
@@ -197,7 +173,7 @@ if __name__ == "__main__":
             print( "Open the file " + f_name + " error.\n \
                     Please check the file exsit. ")
 
-        blocks = SplitToBlock(lines)
+        blocks = common.SplitToBlock(lines)
 
         if para1 == '-s':
             GenrateReport( blocks )

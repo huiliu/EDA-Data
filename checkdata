@@ -7,7 +7,7 @@ import re
 import glob
 import os
 import sys
-import offset
+import common
 
 def checkOne ( fName ):
     """
@@ -25,7 +25,7 @@ def checkOne ( fName ):
         sys.exit(1)
 
     lcd_data = lcd.readlines()
-    datablocks = offset.SplitToBlock(lcd_data)
+    datablocks = common.SplitToBlock(lcd_data)
     
     if fName.find('eda') != -1:    
         i = 22

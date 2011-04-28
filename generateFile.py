@@ -1,7 +1,7 @@
 #!/export/home/liuhui/opt/python3/bin/python3
 
 import sys
-import offset
+import common
 
 #This var use to store the file head part
 FileHead=""
@@ -21,7 +21,7 @@ def GenerateFile( filename ):
         print( "Please check it exsit!" )
         sys.exit(1)
     
-    data = offset.SplitToBlock( f )
+    data = common.SplitToBlock( f )
     FileHead = data[1]
     length = len( data )
     fName = GenerateFileName( data[0], length - 2 )
