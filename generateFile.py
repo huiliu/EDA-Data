@@ -99,7 +99,7 @@ def GenerateFileName( fileInfo, k ):
     elif Info[4] == 'gau' :
         suffix = '.com'
 
-    if k != int(( end - start ) / step + 1):
+    if k != int(( end - start ) / step ):
         print("The input File have error. Please check it.")
         sys.exit(1)
 
