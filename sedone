@@ -18,6 +18,8 @@ if [ `echo $1 | grep 'eda'` ]; then
 elif [ `echo $1 | grep 'opt'` ]; then
     echo "Extract Optimized Coordination Successfully!"
     sed -n '/EQUILIBRIUM GEOMETRY LOCATED/,/INTERNUCLEAR DISTANCES/{/#/d;p;}' $1 |sed -n '/[0-9]\.[0-9]/p' > ${1%.*}.cor
+    #add a blank line behind the coordination data in order to merge data conveniencely
+    echo >> ${1%.*}.cor
     if checkdata ${1%.*}.cor ;then
         exit 0
     else
