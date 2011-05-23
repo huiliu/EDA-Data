@@ -1,4 +1,4 @@
-#!/export/home/liuhui/opt/python3/bin/python3
+#!/export/home/liuhui/opt/bin/python3
 
 """
     This file use to compute the offset of LCD Diple.

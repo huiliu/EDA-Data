@@ -1,4 +1,4 @@
-#!/export/home/liuhui/opt/python3/bin/python3
+#!/export/home/liuhui/opt/bin/python3
 
 """
     This file combined with the script getEnergy which supply 
@@ -34,20 +34,20 @@ def Print(data):
     E1 = "E(HF/DFT)".center(10)
     E2 = "E(MP2)".center(10)
 
-    print ("-"*70)
-    print("Own Basis Set EDA".center(70))
-    print(Es, Ex, Rep, Pol, Disp, E1, E2)
+#   print ("-"*70)
+#   print("Own Basis Set EDA".center(70))
+#   print(Es, Ex, Rep, Pol, Disp, E1, E2)
 
     for i in data[0]:
         print( str( i ).center(10), end='')
 
     print()
-    print("All Basis Set EDA".center(70))
-    print(Es, Ex, Rep, Pol, Disp, E1, E2)
+#   print("All Basis Set EDA".center(70))
+#   print(Es, Ex, Rep, Pol, Disp, E1, E2)
 
-    for i in data[1]:
-        print( str( i ).center(10), end='')
-    print()
+#   for i in data[1]:
+#       print( str( i ).center(10), end='')
+#   print()
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-#!/export/home/liuhui/opt/python3/bin/python3
+#!/export/home/liuhui/opt/bin/python3
 
 import re
 import sys
@@ -69,6 +69,6 @@ def ComputeVariation( origin_data ):
     #print( orb1[3] )
 
 if __name__ == "__main__":
-    #GetIntegral( 'fix1600-eda-mp2.out', [17, 25] )[0]
-    ComputeVariation( GetIntegral( 'fix1600-eda-mp2.out', [17, 25] ) )
+    pprint(GetIntegral( sys.argv[1], [17, 25] )[0])
+    #ComputeVariation( GetIntegral( sys.argv[1], [17, 25] ) )
 

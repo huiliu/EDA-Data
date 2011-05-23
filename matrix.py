@@ -1,4 +1,4 @@
-#!/export/home/liuhui/opt/python3/bin/python3
+#!/export/home/liuhui/opt/bin/python3
 
 from pprint import pprint
 
