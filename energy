@@ -38,16 +38,16 @@ def Print(data):
 #   print("Own Basis Set EDA".center(70))
 #   print(Es, Ex, Rep, Pol, Disp, E1, E2)
 
-    for i in data[0]:
-        print( str( i ).center(10), end='')
+#   for i in data[0]:
+#       print( str( i ).center(10), end='')
 
-    print()
+#   print()
 #   print("All Basis Set EDA".center(70))
 #   print(Es, Ex, Rep, Pol, Disp, E1, E2)
 
-#   for i in data[1]:
-#       print( str( i ).center(10), end='')
-#   print()
+    for i in data[1]:
+        print( str( i ).center(10), end='')
+    print()
 
 
 if __name__ == "__main__":
