@@ -1,4 +1,4 @@
-#!/export/home/liuhui/opt/python3/bin/python3
+#!/home/huiliu/opt/bin/python3
 
 """ This script used to check the data that may be optimization
     or EDA is correct 

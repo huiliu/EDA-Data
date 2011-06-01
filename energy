@@ -1,4 +1,4 @@
-#!/export/home/liuhui/opt/python3/bin/python3
+#!/home/huiliu/opt/bin/python3
 
 """
     This file combined with the script getEnergy which supply 
@@ -7,7 +7,7 @@
 
 import sys
 
-def Split(sdata):
+def Split(sdata, method='mp2'):
     """
         Split       split the origin data to fragment 
                     in order to handle
@@ -16,12 +16,20 @@ def Split(sdata):
     """
     # the data script supplied split with \n
     data = sdata.split('\n')
-
-    ownData = [ float(i) for i in data[1:14:2] ]
-    allData = [ float(i) for i in data[15:28:2] ]
+    if method == 'mp2':
+    # fetch the data (MP2)
+        ownData = [ float(i) for i in data[1:14:2] ]
+        allData = [ float(i) for i in data[15:28:2] ]
+    elif method == 'dft':
+    # fetch the data (DFT)
+        ownData = [ float(i) for i in data[1:12:2] ]
+        allData = [ float(i) for i in data[13:24:2] ]
+    else:
+        print('the parameter is incorrect. Only choose dft/mp2.' )
+        sys.exit(1)
     return (ownData, allData)
 
-def Print(data):
+def Print(data, flag='ALL'):
     """
     Print       print a perfect struct data
         data    the data need output than contain two list
@@ -34,19 +42,39 @@ def Print(data):
     E1 = "E(HF/DFT)".center(10)
     E2 = "E(MP2)".center(10)
 
-    print ("-"*70)
-    print("Own Basis Set EDA".center(70))
-    print(Es, Ex, Rep, Pol, Disp, E1, E2)
+    Es = "Es".center(10)
+    Ex = "Ex".center(10)
+    Rep = "Rep".center(8)
+    Pol = "Pol".center(8)
+    Disp = "Disp".center(10)
+    E1 = "E(HF/DFT)".center(10)
+    E2 = "E(MP2)".center(10)
 
-    for i in data[0]:
-        print( str( i ).center(10), end='')
+    if flag == 'ALL':
+        print ("-"*70)
+        print("Own Basis Set EDA".center(70))
+        print(Es, Ex, Rep, Pol, Disp, E1, E2)
+        printData( data[0] )
 
-    print()
-    print("All Basis Set EDA".center(70))
-    print(Es, Ex, Rep, Pol, Disp, E1, E2)
+        print("All Basis Set EDA".center(70))
+        print(Es, Ex, Rep, Pol, Disp, E1, E2)
+        printData( data[1] )
+    elif flag == 'own':
+    #   print("Own Basis Set EDA".center(70))
+    #   print(Es, Ex, Rep, Pol, Disp, E1, E2)
+        printData( data[0] )
+    elif flag == 'all':
+    #   print("All Basis Set EDA".center(70))
+    #   print(Es, Ex, Rep, Pol, Disp, E1, E2)
+        printData( data[1] )
 
-    for i in data[1]:
-        print( str( i ).center(10), end='')
+def printData(data):
+    """
+    """
+    for i in data:
+        #print( str(i).center(10), end=';' )
+        #output csv file   
+        print( str(i), end=';' )
     print()
 
 
@@ -54,5 +82,10 @@ if __name__ == "__main__":
     if len(sys.argv) == 1:
         print("Input error!\nPlease enter an file name.")
         sys.exit(1)
-    Print( Split(sys.argv[1]) )
+    elif len(sys.argv) == 3:
+        Print( Split(sys.argv[1], sys.argv[2] ) )
+    elif len(sys.argv) == 4:
+        Print( Split(sys.argv[1], sys.argv[2] ), sys.argv[3] )
+    else:
+        Print( Split(sys.argv[1]) )
     sys.exit(0)

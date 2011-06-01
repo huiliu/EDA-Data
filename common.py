@@ -1,4 +1,4 @@
-#!/export/home/liuhui/opt/python3/bin/python3
+#!/home/huiliu/opt/bin
 
 """
     This File include some function that often used
