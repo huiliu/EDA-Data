@@ -5,7 +5,8 @@ if [ -z $1 ]; then
     echo "input error! Please type in file type which you want to process."
     exit 1
 fi
-energy=$(sed -n '/SUMMARY OF INTERACTION ENERGIES/, /END OF LMO INTERACTION ANALYSIS/{/#/d;p;}' $1 | sed -n '/.*ENERGY.*/p'|grep -Po "[-]?[0-9]*\.[0-9]*")
+energy=$(tail -n 200 $1 | sed -n '/SUMMARY OF INTERACTION ENERGIES/, /END OF LMO INTERACTION ANALYSIS/{/#/d;p;}' | sed -n '/.*ENERGY.*/p'|grep -Po "[-]?[0-9]*\.[0-9]*")
+#nergy=$(sed -n '/SUMMARY OF INTERACTION ENERGIES/, /END OF LMO INTERACTION ANALYSIS/{/#/d;p;}' $1| sed -n '/.*ENERGY.*/p'|grep -Po "[-]?[0-9]*\.[0-9]*")
 #echo $energy
 
 method='mp2'
