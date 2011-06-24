@@ -69,7 +69,7 @@ def Distance(coord1, coord2):
         i += 1
 
     return math.sqrt( rr[0]*rr[0] + rr[1]*rr[1] + rr[2]*rr[2] )
-        
+
 def GetTwoBlock(blocks, i, j):
     """
         GenerateTable   get the block that you need
