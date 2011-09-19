@@ -18,7 +18,7 @@ def ReadDataFromFile(fName):
         print( "Failed to read \"" + fName + "\"! \n \
     Please Chech the file exsit." )
         return 1
-    
+
     return fData
 
 def SplitToBlock(lines, regular='^\s*$'):
