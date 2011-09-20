@@ -1,7 +1,9 @@
 #!/export/home/liuhui/opt/bin/python3
 
 """
-    This script use to handle the lcd file which contain "*"
+    This script use to revise the lcd file which contain "*"
+    and generate a file is suitabe to compute offset.
+
     The input file is lcd file
 """
 
@@ -9,7 +11,7 @@ import common
 import sys
 import re
 import os
-from pprint import pprint
+#from pprint import pprint
 
 def getCoord( fName ):
     #read data from the file which contain '*', and split to list
@@ -54,17 +56,20 @@ def Adjust( org, comp ):
     #           x[2] = float(x[2])
     return correct
 
-def refine( fName ):
+def refine(fName, flag=0):
+    """
+        use to revise the data, if the flag is 1, or do nothing.
+    """
 
     lcd_coord = Cut( getCoord( fName ) )
 
-    supermolecule = lcd_coord[4]
-    monomer1 = lcd_coord[5]
-    monomer2 = lcd_coord[6]
+    if flag:
+        supermolecule = lcd_coord[4]
+        monomer1 = lcd_coord[5]
+        monomer2 = lcd_coord[6]
+        lcd_coord[5] = Adjust( monomer1, supermolecule )
+        lcd_coord[6] = Adjust( monomer2, supermolecule )
 
-    lcd_coord[5] = Adjust( monomer1, supermolecule )
-    lcd_coord[6] = Adjust( monomer2, supermolecule )
-#   pprint( lcd_coord )
     out(lcd_coord)
 
 def out(coord):
@@ -88,5 +93,9 @@ def out(coord):
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         print("Please Type in the file name which you want to revise.")
+    elif len(sys.argv) == 2:
+        refine(sys.argv[1])
+    elif len(sys.argv) == 3:
+        refine(sys.argv[1], sys.argv[2])
     else:
-        refine( sys.argv[1] )
+        print("Too many option! i don't need that.")
