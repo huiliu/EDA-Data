@@ -8,6 +8,7 @@
 import common
 import sys
 import re
+import os
 from pprint import pprint
 
 def getCoord( fName ):
@@ -67,14 +68,25 @@ def refine( fName ):
     out(lcd_coord)
 
 def out(coord):
+    """
+        write the revised data to the input file.
+
+        coord       the revised data
+    """
+    f = open(sys.argv[1], 'w')
+
+    #f = open('tmp', 'w')
     for x in coord:
         for y in x:
+            row = ''
             for z in y:
-                print( z.center(12), end='' )
-            print()
-        print()
-
+                row += z.rjust(12)
+            f.write(row + '\n')
+        f.write('\n')
+    f.close
 
 if __name__ == '__main__':
-#   print(sys.argv[1])
-    refine( sys.argv[1] )
+    if len(sys.argv) == 1:
+        print("Please Type in the file name which you want to revise.")
+    else:
+        refine( sys.argv[1] )
