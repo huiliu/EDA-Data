@@ -8,7 +8,7 @@ fi
 
 for file in ./*.lcd
 do
-    if refine "$file"; then
+#   if refine "$file"; then
         echo "$file"
         if [[ "$1" == "-c" ]]; then
             offset $1 "${file%.*}.tmp">>LCD
@@ -18,5 +18,5 @@ do
             echo "Input error!"
             exit 1
         fi
-    fi
+#   fi
 done
