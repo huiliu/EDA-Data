@@ -1,4 +1,5 @@
 #!/export/home/liuhui/opt/bin/python3
+# -*- coding: UTF-8 -*-
 
 """
     This script used to check the data that may be optimization

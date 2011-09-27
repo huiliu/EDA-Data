@@ -1,10 +1,17 @@
 #!/export/home/liuhui/opt/bin/python3
+# -*- coding: utf-8 -*-
+
+#
+# 
+#
+#
+#
+#
 
 import sys
 import offset
 import matrix
 import common
-
 
 def generateJS( js, fname ):
     """
@@ -24,7 +31,6 @@ def generateJS( js, fname ):
     f.close()
 
     print("generate JavaScript sucessfully!")
-
 
 def ChartData( data ):
     name = "Orbital"
@@ -85,7 +91,6 @@ def HandleData(bData):
         print("The Data May be not completely! Please Check it.")
 
     return data
-
 
 if __name__ == "__main__":
     n = len(sys.argv)
