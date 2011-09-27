@@ -193,7 +193,7 @@ def parsecmd():
     blocks = SplitToBlock(lines)
 
     if options.ostyle == 'report':
-        GenrateReport( blocks, para1 )
+        GenrateReport( blocks, 'report' )
         sys.exit(0)
     elif options.ostyle == 'summary':
         GenrateReport( blocks )
