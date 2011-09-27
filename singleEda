@@ -23,11 +23,11 @@ echo "--------------------------------$filename----------------------------"
 if sedone $filename; then
     if [ $x -eq 0 ]; then
     # Output Summary
-        offset -s "${filename%.*}.lcd"
+        offset -o summary "${filename%.*}.lcd"
         getEnergy "$filename"
     else
     # Output Result to file LCD and Energy
-        offset -c "${filename%.*}.lcd">>LCD
+        offset -o report "${filename%.*}.lcd">>LCD
         getEnergy "$filename">>Energy
     fi
 fi
