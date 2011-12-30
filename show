@@ -1,0 +1,69 @@
+#!/bin/bash
+
+#set -x
+
+TMPDIR="/home/$(whoami)"
+
+show(){
+    command=''
+# ---------------- analysis command option --------------
+    if [ $1 == 'list' ]||[ $1 == 'show' ];then
+        if [ -z $2 ]||[ $2 == 'all' ];then
+            command="ls $TMPDIR"
+            ShowAll "$command"
+        elif `echo "$2" | grep -q '^c01'`; then
+            result=`ssh $2 "ls $TMPDIR"`
+            echo "On $2:"
+            echo $result
+            return 0
+        else
+            echo "input error!"
+            echo "Usage: cmd <list|show|del> [all]"
+            exit 1
+        fi
+    elif [ $1 == 'del' ];then
+        if [ -z $2 ]||[ $2 == 'all' ];then
+            command="rm -rfv $TMPDIR/*"
+            ShowAll "$command"
+        elif `echo $2 | grep -q '^c01'`; then
+            result=`ssh $2 "rm -rfv $TMPDIR/*"`
+            echo "On $2:"
+            echo $result
+            return 0
+        else
+            echo "input error!"
+            echo "Usage: cmd <list|show|del> [all]"
+            exit 1
+        fi
+    else
+        echo 'Input Error!'
+        echo "Usage: cmd <list|show|del> [all]"
+        exit 1
+    fi
+}
+ShowAll(){
+    command="$1"
+    empty=''
+    for i in `seq -f "%02g" 19`
+    do
+        result=`ssh "c01$i" $command`
+# when under the directory has more file or dir, if you test the result string
+# by [ -z $string ], there will output an error because there has blank between
+# the filelist
+        if `echo $result | grep -q '[a-zA-Z0-9]'`;then
+        #if [ -z $result ];then
+            echo "On C01$i:"
+            echo "         $result"
+        else
+            empty="c01$i, $empty"
+        fi
+    done
+    
+    echo "the nodes: $empty hasn't tmp file."
+}
+
+if [ -z $1 ];then
+    show list
+else
+    show $1 $2
+fi
