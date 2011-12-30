@@ -48,7 +48,7 @@ if __name__ == "__main__":
         sys.exit(1)
     else:
         try:
-            d = open( sys.argv[1], 'r' ).readlines() 
+            d = open( sys.argv[1], 'r' ).readlines()
         except IOError:
             print("Failed to open \"" + sys.argv[1] + "\".")
             sys.exit(1)
