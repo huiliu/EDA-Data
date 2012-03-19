@@ -1,4 +1,4 @@
-#!/home/huiliu/opt/bin
+#!/bin/env python3
 
 """
     This file use to compute the offset of LCD Diple.

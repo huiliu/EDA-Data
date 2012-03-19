@@ -1,4 +1,4 @@
-#!/home/huiliu/opt/bin/python3
+#!/bin/env python3
 
 import sys
 import common
