@@ -7,7 +7,8 @@ if [ -z $1 ]; then
     echo "input error! Please type in file name which you want to process."
     exit 1
 fi
-if [ `echo $1 | grep 'eda'` ]; then
+#if [ `echo $1 | grep 'eda'` ]; then
+if [[ `head -200 $1 | grep -i 'runtyp=eda'` ]]; then
     echo "Extract Eda Data Successfully! "
     sed -n '/LCD DIPOLES/,/DONE WITH ENERGY LOCALIZATION/{/#/d;p;}' $1 > ${1%.*}.lcd
     if checkdata ${1%.*}.lcd ;then
@@ -15,7 +16,8 @@ if [ `echo $1 | grep 'eda'` ]; then
     else
         exit 1
     fi
-elif [ `echo $1 | grep 'opt'` ]; then
+#elif [ `echo $1 | grep 'opt'` ]; then
+elif [[ `head -200 $1 | grep -i 'runtyp=optimize'` ]]; then
     echo "Extract Optimized Coordination Successfully!"
     sed -n '/EQUILIBRIUM GEOMETRY LOCATED/,/INTERNUCLEAR DISTANCES/{/#/d;p;}' $1 |sed -n '/[0-9]\.[0-9]/p' > ${1%.*}.cor
     #add a blank line behind the coordination data in order to merge data conveniencely
@@ -25,4 +27,6 @@ elif [ `echo $1 | grep 'opt'` ]; then
     else
         exit 1
     fi
+else
+    echo "不能识别文件。sedone"
 fi
