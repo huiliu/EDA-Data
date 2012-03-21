@@ -2,16 +2,26 @@
 
 #set -x
 
-TMPDIR="/state/partition1/$(whoami)"
+# The directory of tmp file and Nodes number
+if [ $(hostname) == "Pauling" ];then
+    TMPDIR="/home/$(whoami)"
+    NUMNODES=19
+elif [ $(hostname) == "Slater.ftcc" ];then
+    TMPDIR="/state/partition1/$(whoami)"
+    NUMNODES=11
+else
+    echo "Please setup the tmp directory and the number of node"
+    exit 1
+fi
 
 #
 #
 # The main() function parser command-line option and perform operate.
 #
 #
+# ---------------- analysis command option --------------
 main(){
     command=''
-# ---------------- analysis command option --------------
     if [ $1 == 'list' ]||[ $1 == 'show' ];then
         if [ -z $2 ]||[ $2 == 'all' ];then
             Execute 'list'
@@ -54,7 +64,7 @@ main(){
 #
 #
 Execute(){
-    for i in `seq -f "%02g" 11`
+    for i in `seq -f "%02g" $NUMNODES`
     do
         if [[ "$1" == 'list' ]];then
             echo "On c01$i:"
@@ -91,6 +101,7 @@ Del(){
 #
 #
 if [ -z $1 ];then
+    echo "Usage: cmd <list|show|del> [all]"
     main list
 else
     main $1 $2
