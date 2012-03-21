@@ -1,4 +1,5 @@
-#!/export/home/liuhui/opt/python3/bin/python3
+#!/bin/env python3
+# -*- coding: UTF-8 -*-
 
 """
     This file use to compute the offset of LCD Diple.
@@ -23,6 +24,7 @@ import re
 import sys
 import os
 import math
+from optparse import OptionParser
 
 def OutputTable(coord, r):
     """
@@ -42,7 +44,7 @@ def OutputTable(coord, r):
                coord[1][i][0],coord[1][i][1], coord[1][i][2], \
                r[i]) )
         i += 1
-    
+
 def OutputOffset(offset):
     """
     OutputOffset    only output the offset
@@ -68,7 +70,7 @@ def Distance(coord1, coord2):
         i += 1
 
     return math.sqrt( rr[0]*rr[0] + rr[1]*rr[1] + rr[2]*rr[2] )
-        
+
 def GetTwoBlock(blocks, i, j):
     """
         GenerateTable   get the block that you need
@@ -161,52 +163,67 @@ def GenrateReport(coord, output_type='-s'):
     else:
         print( OutputOffset( coord_r1[1] ) + OutputOffset( coord_r2[1] ) )
 
-if __name__ == "__main__":
+def parsecmd():
+    """
+        Parse the command option by a convenient method.
+        and do the work gived by user.
+    """
+    usage = "Usage: %prog [options] filename"
+    p = OptionParser(usage)
+    p.add_option('-o', action='store', dest='ostyle',
+                    help="control the offset output style. the style coulde \
+                        be report or summary. [Default: %default]",
+                    default='summary')
+    p.add_option('-e', '--energy', action='store', dest='energy',
+                    default='all', help="Control the output style of energy.\
+                    you can choose own or all. In developing.")
 
-    n = len(sys.argv)
-
-    if n == 1 :
-        print("Input error!\nPlease type in -h or --help")
+    options, argv = p.parse_args()
+    if not argv:
+        print("Please Type in the file name which you want to deal with.")
+        sys.exit(1)
+    elif len(argv) > 1:
+        print("the function in developing! Please wait a minute.")
         sys.exit(1)
 
-    para1 = sys.argv[1]
+    try:
+        lines = open(argv[0], 'r' ).readlines()
+    except IOError:
+        print( "Open the file " + f_name + " error.\n \
+                Please check the file exsit. ")
+    blocks = SplitToBlock(lines)
 
-    if n == 2 and (para1 == '-h' or para1 == '--help'):
-        print(" \
-        offset [-c | -s ] filename [own | all]\n \
-        -h --help   get help information\n \
-        -c          output chartdata(only offset data)\n \
-        -s          output summary data(contain origin coord and \n \
-                    offset data\n \
-        filename    The coordination data that you want to compute\n \
-                    offset you can use another command(lcd refine)\n \
-                     to generate the file.\n \
-        own         compute the offset of coordination come from \n \
-                    the own basis . default own\n \
-        all         compute all data. in processing.\n \
-        ")
-    elif n == 2 and (para1 != '-h' or para1 != '--help'):
+    if options.ostyle == 'report':
+        GenrateReport( blocks, 'report' )
+        sys.exit(0)
+    elif options.ostyle == 'summary':
+        GenrateReport( blocks )
+        sys.exit(0)
+    else:
         print("Error parameter! Please type in -h check.")
         sys.exit(1)
-    elif n == 3:
-        f_name = sys.argv[2]
 
-        try:
-            lines = open( f_name , 'r' ).readlines()
-        except IOError:
-            print( "Open the file " + f_name + " error.\n \
-                    Please check the file exsit. ")
+if __name__ == "__main__":
+    parsecmd()
+    #elif n == 3:
+    #    f_name = sys.argv[2]
 
-        blocks = SplitToBlock(lines)
+    #    try:
+    #        lines = open( f_name , 'r' ).readlines()
+    #    except IOError:
+    #        print( "Open the file " + f_name + " error.\n \
+    #                Please check the file exsit. ")
 
-        if para1 == '-s':
-            GenrateReport( blocks )
-            sys.exit(0)
-        elif para1 == '-c':
-            GenrateReport( blocks, para1 )
-            sys.exit(0)
-        else:
-            print("Error parameter! Please type in -h check.")
-            sys.exit(1)
-    else:
-        print( "The features is under develop." )    
+    #    blocks = SplitToBlock(lines)
+
+    #    if para1 == '-s':
+    #        GenrateReport( blocks )
+    #        sys.exit(0)
+    #    elif para1 == '-c':
+    #        GenrateReport( blocks, para1 )
+    #        sys.exit(0)
+    #    else:
+    #        print("Error parameter! Please type in -h check.")
+    #        sys.exit(1)
+    #else:
+    #    print( "The features is under develop." )

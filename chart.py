@@ -1,10 +1,10 @@
-#!/export/home/liuhui/opt/python3/bin/python3
+#!/bin/env python3
+# -*- coding: utf-8 -*-
 
 import sys
 import offset
 import matrix
 import common
-
 
 def generateJS( js, fname ):
     """
@@ -25,7 +25,6 @@ def generateJS( js, fname ):
 
     print("generate JavaScript sucessfully!")
 
-
 def ChartData( data ):
     name = "Orbital"
     section = 'series: ['
@@ -45,7 +44,7 @@ def ReadData( fName = '/tmp/chartdata' ):
     blocks = common.ReadDataFromFile( fName )
 
     return blocks
-    
+
 def FormatOutput( data ):
     """
         FormatOutput        make the output information is perfect.
@@ -62,7 +61,7 @@ def FormatOutput( data ):
         i += 1
     
     return oData
-        
+
 def HandleData(bData):
     """
         HandleData      transpose the input data to a matrix
@@ -86,12 +85,11 @@ def HandleData(bData):
 
     return data
 
-
 if __name__ == "__main__":
     n = len(sys.argv)
     if n == 1:
         print("Input error!")
-        print( "chart [-w | datafile] distfile " ) 
+        print( "chart [-w | datafile] distfile " )
         sys.exit(1)
 
     distfile = 'OffsetChart'

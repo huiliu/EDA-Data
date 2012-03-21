@@ -1,4 +1,5 @@
-#!/export/home/liuhui/opt/python3/bin/python3
+#!/bin/env python3
+# -*- coding: UTF-8 -*-
 
 import sys
 import common
@@ -67,7 +68,7 @@ def WriteToFile( fName, fHead, data, f_type ):
         print("I am not God! I cann't generate this type of file.\n \
     I just can generate GAMESS or GAUSSIAN input file.")
         sys.exit(1)
-                
+
 def CheckTitle( data, num):
     d = data.split(" ")
     if len(d) < num:
@@ -108,7 +109,7 @@ def GenerateFileName( fileInfo, k ):
 
     Name.append( Info[4] )
     return Name
-        
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         print(" generateFile <InputFileName>")

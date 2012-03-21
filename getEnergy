@@ -6,6 +6,17 @@ if [ -z $1 ]; then
     exit 1
 fi
 
-energy=$(sed -n '/SUMMARY OF INTERACTION ENERGIES/, /END OF LMO INTERACTION ANALYSIS/{/#/d;p;}' $1 | sed -n '/.*ENERGY.*/p'|grep -Po "[-]?[0-9]*\.[0-9]*")
+energy=$(tail -n 200 $1 | sed -n '/SUMMARY OF INTERACTION ENERGIES/, /END OF LMO INTERACTION ANALYSIS/{/#/d;p;}' | sed -n '/.*ENERGY.*/p'|grep -Po "[-]?[0-9]*\.[0-9]*")
 #echo $energy
-energy "$energy"
+
+method='mp2'
+flag='ALL'
+
+if [ $# -eq 2 ]; then
+    method=$2
+elif [ $# -eq 3 ]; then
+    method=$2
+    flag=$3
+fi
+
+energy "$energy" "$method" "$flag"

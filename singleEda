@@ -21,18 +21,13 @@ fi
 
 echo "--------------------------------$filename----------------------------"
 if sedone $filename; then
-    lcd_fileName="${filename%.*}.lcd"
-    if refine "$lcd_fileName"; then
-        if [ $x -eq 0 ]; then
-        # Output Summary
-            offset -s "${filename%.*}.tmp"
-            getEnergy "$filename"
-        else
-        # Output Result to file LCD and Energy
-            offset -c "${filename%.*}.tmp">>LCD
-            getEnergy "$filename">>Energy
-        fi
+    if [ $x -eq 0 ]; then
+    # Output Summary
+        offset -o summary "${filename%.*}.lcd"
+        getEnergy "$filename"
     else
-        echo "Refine Data error!"
+    # Output Result to file LCD and Energy
+        offset -o report "${filename%.*}.lcd">>LCD
+        getEnergy "$filename">>Energy
     fi
 fi
