@@ -2,17 +2,21 @@
 
 #set -x
 
-TMPDIR="/home/$(whoami)"
+TMPDIR="/state/partition1/$(whoami)"
 
-show(){
+#
+#
+# The main() function parser command-line option and perform operate.
+#
+#
+main(){
     command=''
 # ---------------- analysis command option --------------
     if [ $1 == 'list' ]||[ $1 == 'show' ];then
         if [ -z $2 ]||[ $2 == 'all' ];then
-            command="ls $TMPDIR"
-            ShowAll "$command"
+            Execute 'list'
         elif `echo "$2" | grep -q '^c01'`; then
-            result=`ssh $2 "ls $TMPDIR"`
+            result=`ssh -Y $2 "ls $TMPDIR"`
             echo "On $2:"
             echo $result
             return 0
@@ -23,14 +27,12 @@ show(){
         fi
     elif [ $1 == 'del' ];then
         if [ -z $2 ]||[ $2 == 'all' ];then
-        # DELETE TEMP FILE ON THE ALL NODE
-            command="rm -rfv $TMPDIR/*"
-            ShowAll "$command"
+            echo "Delete Temp File On $2:"
+            Execute "del"
+            return 0
         elif `echo $2 | grep -q '^c01'`; then
-        # DELETE TEMP FILE ON THE SINGLE NODE
-            result=`ssh $2 "rm -rfv $TMPDIR/*"`
-            echo "On $2:"
-            echo $result
+            echo "Delete Temp File On $2:"
+            Del $2
             return 0
         else
             echo "input error!"
@@ -43,29 +45,53 @@ show(){
         exit 1
     fi
 }
-ShowAll(){
-    command="$1"
-    empty=''
-    for i in `seq -f "%02g" 19`
+
+#
+#
+# Function Execute() choose the operation by the command 'list' or 'del'
+# 'list'    will list the temp dir on the node
+# 'del'     will del the temp file which isn't used on the node
+#
+#
+Execute(){
+    for i in `seq -f "%02g" 11`
     do
-        result=`ssh "c01$i" $command`
-# when under the directory has more file or dir, if you test the result string
-# by [ -z $string ], there will output an error because there has blank between
-# the filelist
-        if `echo $result | grep -q '[a-zA-Z0-9]'`;then
-        #if [ -z $result ];then
-            echo "On C01$i:"
-            echo "         $result"
-        else
-            empty="c01$i, $empty"
+        if [[ "$1" == 'list' ]];then
+            echo "On c01$i:"
+            ssh -Y "c01$i" "ls $TMPDIR"
+        elif [[ "$1" == 'del' ]];then
+            Del "c01$i"
         fi
     done
-    
-    echo "the nodes: $empty hasn't tmp file."
 }
 
+#
+#
+# Function Del() check the file and delete it
+#
+#
+Del(){
+    for dir in $(ssh -Y "$1" "ls $TMPDIR")
+    do
+        echo $dir
+        result=`ssh -Y "$1" "ls $TMPDIR/$dir | xargs -I {} lsof $TMPDIR/$dir/{} | egrep -c '[a-z]'"`
+        echo $result
+        if [[ $result -eq 0 ]];then
+            ssh -Y "$1" "rm -rfv $TMPDIR/$dir"
+        else
+            echo "Some program is using the file."
+            break
+        fi
+    done
+}
+
+#
+#
+# Current just accept two parameter
+#
+#
 if [ -z $1 ];then
-    show list
+    main list
 else
-    show $1 $2
+    main $1 $2
 fi
