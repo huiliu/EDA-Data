@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-#!/export/home/liuhui/opt/bin/python3
-# -*- coding: UTF-8 -*-
-=======
 #!/bin/env python3
->>>>>>> slater
+# -*- coding: UTF-8 -*-
 
 """
     This file use to compute the offset of LCD Diple.
@@ -206,31 +202,28 @@ def parsecmd():
     else:
         print("Error parameter! Please type in -h check.")
         sys.exit(1)
-<<<<<<< HEAD
 
 if __name__ == "__main__":
     parsecmd()
-=======
-    elif n == 3:
-        f_name = sys.argv[2]
+    #elif n == 3:
+    #    f_name = sys.argv[2]
 
-        try:
-            lines = open( f_name , 'r' ).readlines()
-        except IOError:
-            print( "Open the file " + f_name + " error.\n \
-                    Please check the file exsit. ")
+    #    try:
+    #        lines = open( f_name , 'r' ).readlines()
+    #    except IOError:
+    #        print( "Open the file " + f_name + " error.\n \
+    #                Please check the file exsit. ")
 
-        blocks = SplitToBlock(lines)
+    #    blocks = SplitToBlock(lines)
 
-        if para1 == '-s':
-            GenrateReport( blocks )
-            sys.exit(0)
-        elif para1 == '-c':
-            GenrateReport( blocks, para1 )
-            sys.exit(0)
-        else:
-            print("Error parameter! Please type in -h check.")
-            sys.exit(1)
-    else:
-        print( "The features is under develop." )
->>>>>>> slater
+    #    if para1 == '-s':
+    #        GenrateReport( blocks )
+    #        sys.exit(0)
+    #    elif para1 == '-c':
+    #        GenrateReport( blocks, para1 )
+    #        sys.exit(0)
+    #    else:
+    #        print("Error parameter! Please type in -h check.")
+    #        sys.exit(1)
+    #else:
+    #    print( "The features is under develop." )

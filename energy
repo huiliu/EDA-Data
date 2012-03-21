@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-#!/export/home/liuhui/opt/bin/python3
-# -*- coding: UTF-8 -*-
-=======
 #!/bin/env python3
->>>>>>> slater
+# -*- coding: UTF-8 -*-
 
 """
     This file combined with the script getEnergy which supply 
