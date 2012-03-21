@@ -1,8 +1,7 @@
-#!/export/home/liuhui/opt/bin/python3
+#!/bin/env python3
 # -*- coding: UTF-8 -*-
 
 from pprint import pprint
-
 
 def transpose( matrix ):
     nColumn = len(matrix[0])

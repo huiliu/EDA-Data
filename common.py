@@ -1,4 +1,4 @@
-#!/export/home/liuhui/opt/bin/python3
+#!/home/huiliu/opt/bin
 # -*- coding: UTF-8 -*-
 
 """

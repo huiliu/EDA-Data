@@ -16,7 +16,7 @@
 #   to read backwards, just as a "space bar" lets you read forward.  The
 #   only  other 'more' subcommand you need to know is "q" for quit!
 #
-set doc=~fmying/gamess/INPUT.DOC
+set doc=~huiliu/opt/gamess/INPUT.DOC
 
 if ($1 == '-h' | $1 == '-H') then
   set me=$0

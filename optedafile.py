@@ -1,5 +1,4 @@
-#!/export/home/liuhui/opt/bin/python3
-# -*- coding: UTF-8 -*-
+#!/bin/env python3
 
 import sys
 import common

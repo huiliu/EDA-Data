@@ -1,12 +1,5 @@
-#!/export/home/liuhui/opt/bin/python3
+#!/bin/env python3
 # -*- coding: utf-8 -*-
-
-#
-# 
-#
-#
-#
-#
 
 import sys
 import offset

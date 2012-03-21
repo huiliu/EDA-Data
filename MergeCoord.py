@@ -1,4 +1,4 @@
-#!/export/home/liuhui/opt/bin/python3
+#!/bin/env python3
 # -*- coding: UTF-8 -*-
 
 import glob
