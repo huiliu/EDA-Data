@@ -23,9 +23,11 @@ show(){
         fi
     elif [ $1 == 'del' ];then
         if [ -z $2 ]||[ $2 == 'all' ];then
+        # DELETE TEMP FILE ON THE ALL NODE
             command="rm -rfv $TMPDIR/*"
             ShowAll "$command"
         elif `echo $2 | grep -q '^c01'`; then
+        # DELETE TEMP FILE ON THE SINGLE NODE
             result=`ssh $2 "rm -rfv $TMPDIR/*"`
             echo "On $2:"
             echo $result
