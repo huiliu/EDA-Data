@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# This script use to clean the temp file on every node.
+#
+# Used by crontab
+#
+
+username="$(whoami)"
+export LOGFILE="$HOME/log/cron.log"
+
+echo `date` >>$LOGFILE
+echo "CHECK THE TEMP FILE ON ALL NODE">>$LOGFILE
+echo `show list`>>$HOME/log/cron.log
+echo "DELETE ALL TEMP FILE ON NODES">>$HOME/log/cron.log
+echo `show del`>>$HOME/log/cron.log
