@@ -58,7 +58,7 @@ def checkOne ( fName ):
         sys.exit(1)
     elif( len( reg.findall( ''.join(lcd_data) ) ) > 11 ):
     # check output data is correct by find the string "****"
-        print("\n---'"+ fName +"' computed sucessfully！\n \
+        print("\n---'"+ fName +"' computed sucessfully!\n \
     and the file contain'*****', don't worry, i should revise it.\n")
         lcd.close()
         # Revise the data
