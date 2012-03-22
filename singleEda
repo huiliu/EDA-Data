@@ -10,7 +10,6 @@ if [ $# -eq 1 ];then
     x=0
     filename=$1
 elif [ $# -eq 2 ];then
-    echo $1
     if [[ $1 == '-r' || $1 == '--report' ]];then
         x=1
     else
