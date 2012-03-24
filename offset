@@ -28,7 +28,7 @@ from optparse import OptionParser
 
 def OutputTable(coord, r):
     """
-    OutputOffset    only output Table that contain 
+    OutputOffset    only output Table that contain
                     coordination and offset
     coord           the origin coordination
     r               the offset value
@@ -40,7 +40,7 @@ def OutputTable(coord, r):
         coord[1][i] = [float(x) for x in coord[1][i][1:4]]
         #print(coordination[0][i][0])
         print( "%11.6f%11.6f%11.6f%11.6f%11.6f%11.6f%11.6f" \
-            % (coord[0][i][0],coord[0][i][1], coord[0][i][1], \
+            % (coord[0][i][0],coord[0][i][1], coord[0][i][2], \
                coord[1][i][0],coord[1][i][1], coord[1][i][2], \
                r[i]) )
         i += 1
@@ -89,7 +89,7 @@ def GetTwoBlock(blocks, i, j):
     coord1 = []
     coord2 = []
 
-    while k < length: 
+    while k < length:
         coord1.append( blocks[i][k].strip().split() )
         coord2.append( blocks[j][k].strip().split() )
         k += 1
@@ -113,7 +113,7 @@ def ComputeOffset(twoblock, i, j):
 
 def PrintBlock(blocks):
     """
-        
+
     """
     for block in blocks:
         for line in block:
@@ -122,7 +122,7 @@ def PrintBlock(blocks):
 
 def SplitToBlock(lines, regular='^\s*$'):
     """
-        SplitToBlock    split the data file to block which is easy to 
+        SplitToBlock    split the data file to block which is easy to
                         process.
         lines           the data that is conpoud
     """
@@ -148,10 +148,10 @@ def SplitToBlock(lines, regular='^\s*$'):
 def GenrateReport(coord, output_type='-s'):
     """
         Generateown     output the origin coordination and the offset
-        Data            the all origin coordination which may be 
+        Data            the all origin coordination which may be
                         contain eleven group.
     """
-    
+
     coord_r1 = ComputeOffset(coord, 0, 5)
     coord_r2 = ComputeOffset(coord, 1, 6)
 
