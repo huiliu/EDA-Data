@@ -191,6 +191,7 @@ def parsecmd():
                     you can choose own or all. In developing.")
 
     options, argv = p.parse_args()
+
     if not argv:
         print("Please Type in the file name which you want to deal with.")
         sys.exit(1)
@@ -201,9 +202,10 @@ def parsecmd():
     try:
         lines = open(argv[0], 'r' ).readlines()
     except IOError:
-        print( "Open the file " + f_name + " error.\n \
+        print( "Open the file " + argv[0] + " error.\n \
                 Please check the file exsit. ")
     blocks = SplitToBlock(lines)
+    # output lcd coordination
     OutputCoordination(argv[0], blocks)
 
     if options.ostyle == 'report':
