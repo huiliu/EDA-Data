@@ -3,7 +3,7 @@
 
 """
     This file use to compute the offset of LCD Diple.
-    You must offer the data file which contain all LMO doroids 
+    You must offer the data file which contain all LMO doroids
     coordination and seperate every parts with blank line.
 
     Group 1     Monomer 1 with own basis
@@ -71,7 +71,7 @@ def Distance(coord1, coord2):
 
     return math.sqrt( rr[0]*rr[0] + rr[1]*rr[1] + rr[2]*rr[2] )
 
-def GetTwoBlock(blocks, i, j):
+def GetTwoBlock(blocks, i, j, flags=True):
     """
         GenerateTable   get the block that you need
         block           all the origin coordination
@@ -79,20 +79,32 @@ def GetTwoBlock(blocks, i, j):
         j               the second you need
     """
 
-    if len(blocks[i]) != len(blocks[j]):
+
+    ilength = len(blocks[i])
+    jlength = len(blocks[j])
+
+    if ilength != jlength and flags:
         print("two block with different size")
         sys.exit(1)
-
-    length = len(blocks[i])
 
     k = 0
     coord1 = []
     coord2 = []
 
-    while k < length:
-        coord1.append( blocks[i][k].strip().split() )
-        coord2.append( blocks[j][k].strip().split() )
-        k += 1
+
+    if flags:
+        while k < ilength:
+            coord1.append( blocks[i][k].strip().split() )
+            coord2.append( blocks[j][k].strip().split() )
+            k += 1
+    else:
+        while k < ilength:
+            coord1.append( blocks[i][k].strip().split() )
+            k += 1
+        k = 0
+        while k < jlength:
+            coord2.append( blocks[j][k].strip().split() )
+            k += 1
     #print(coord1)
     return (coord1, coord2)
 
@@ -192,6 +204,7 @@ def parsecmd():
         print( "Open the file " + f_name + " error.\n \
                 Please check the file exsit. ")
     blocks = SplitToBlock(lines)
+    OutputCoordination(argv[0], blocks)
 
     if options.ostyle == 'report':
         GenrateReport( blocks, 'report' )
@@ -202,6 +215,21 @@ def parsecmd():
     else:
         print("Error parameter! Please type in -h check.")
         sys.exit(1)
+
+def OutputCoordination(fname, blocks):
+    wfile = fname.replace('lcd', 'lcor')
+    f = open(wfile, 'w')
+
+    OutFile = fname.replace('lcd', 'out')
+    cmd = "head -500 {0}".format(OutFile) + "|sed -n '/CHARGE         X                   Y                   Z/, /^$/{/#/d;p}' |sed '/^ \{2,\}/d;/^$/d'"
+    oringinCoordination = os.popen(cmd).read()
+    twoBlocks = GetTwoBlock(blocks, 5, 6, False)
+    reg = re.compile(r'DU')
+    for block in twoBlocks:
+        for lines in block:
+            f.write('\t'.join(lines).replace("DU",'HE    2.0' ) + "\n")
+    f.write(oringinCoordination)
+    f.close()
 
 if __name__ == "__main__":
     parsecmd()
