@@ -11,6 +11,11 @@
     factor为经验因子，默认为2
 4. 注意原坐标来看计算HESSIAN的输入文件INP，请确认输入文件
     没有被修改
+
+
+TODO:
+    1. 检查HASSIAN计算文件是否有虚频
+    2. 根据经验判断振动频率是否正常
 """
 
 import os
@@ -32,14 +37,11 @@ def parsecmd():
         sys.exit(1)
     return (options, argv[0])
 
-if __name__ == "__main__":
-
-    options, argv = parsecmd()
-    factor = options.factor
-
-
+def NewOptCoordination(fname, factor):
+    """生成新的优化初始坐标
+    """
     # the file is the hess output file. hess.out
-    HessOutputFile = argv
+    HessOutputFile = fname
     # May be have error when file name contained out
     HessInputFile = HessOutputFile.replace('out', 'inp')
     cmd = "tail -20000 " + HessOutputFile + "|sed -n '/1           2           3           4           5/,/6           7           8           9          10/{/#/d;p;}' /tmp/test |sed '1,6d' |sed -n -e :a -e '1,12!{P;N;D;};N;ba' | sed 's/.*            //g'|awk '{print $2}'"
@@ -64,3 +66,10 @@ if __name__ == "__main__":
     for i in range(numAtom):
         point = [format(a + b/factor, "13.9") for a, b in zip(InitCoor[i*3:(i+1)*3], AdjustCoord[i*3:(i+1)*3])]
         print(CoorTag[i] + '\t'.join(point))
+
+if __name__ == "__main__":
+
+    options, argv = parsecmd()
+    factor = options.factor
+
+    NewOptCoordination(argv, factor)
