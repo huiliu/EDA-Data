@@ -44,11 +44,11 @@ def NewOptCoordination(fname, factor):
     HessOutputFile = fname
     # May be have error when file name contained out
     HessInputFile = HessOutputFile.replace('out', 'inp')
-    cmd = "tail -20000 " + HessOutputFile + "|sed -n '/1           2           3           4           5/,/6           7           8           9          10/{/#/d;p;}' /tmp/test |sed '1,6d' |sed -n -e :a -e '1,12!{P;N;D;};N;ba' | sed 's/.*            //g'|awk '{print $2}'"
+    cmd = "tail -20000 " + HessOutputFile + "|sed -n '/1           2           3           4           5/,/6           7           8           9          10/{/#/d;p;}' |sed '1,6d' |sed -n -e :a -e '1,12!{P;N;D;};N;ba' | sed 's/.*            //g'|awk '{print $2}'"
     HessOri = os.popen(cmd).readlines()
     AdjustCoord = [ float(x) for x in HessOri]
 
-    cmd = "sed -n '/C1/,/$end/{/#/d;p;}' " + HessInputFile + "|sed -e '1d' -e '$d'"
+    cmd = "sed -rn '/C1/,/$(end)|(END)/{/#/d;p;}' " + HessInputFile + "|sed -e '1d' -e '$d'"
     InitialCoordination = os.popen(cmd).readlines()
     InitCoor = []
     CoorTag = []
