@@ -32,7 +32,7 @@ main(){
             return 0
         else
             echo "input error!"
-            echo "Usage: cmd <list|show|del> [all]"
+            echo "Usage: show <list|show|del> [all]"
             exit 1
         fi
     elif [ $1 == 'del' ];then
