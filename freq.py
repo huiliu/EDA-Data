@@ -46,7 +46,8 @@ def NewOptCoordination(fname, factor):
     HessInputFile = HessOutputFile.replace('out', 'inp')
     #cmd = "tail -20000 " + HessOutputFile + "|sed -n '/1           2           3           4           5/,/6           7           8           9          10/{/#/d;p;}' |sed '1,6d' |sed -n -e :a -e '1,12!{P;N;D;};N;ba' | sed 's/.*            //g'|awk '{print $2}'"
 
-    cmd = "tail -1000 " + HessOutputFile + "|sed -n '/1 \+2 \+3 \+4 \+5/,/6 \+7 \+8 \+9 \+10/{/#/d;p;}' porphyrin-na-cct-mp2-hess.out |grep -A 10000 'IR INTENSITY'|sed '1,2d'|sed -n -e :a -e '1,12!{P;N;D;};N;ba' | sed 's/.\{20\}//'|awk '{print $1}'"
+    cmd = "tail -5000 " + HessOutputFile + "|sed -n '/1 \+2 \+3 \+4 \+5/,/6 \+7 \+8 \+9 \+10/{/#/d;p;}' |grep -A 10000 'IR INTENSITY'|sed '1,2d'|sed -n -e :a -e '1,12!{P;N;D;};N;ba' | sed 's/.\{20\}//'|awk '{print $1}'"
+    #cmd ="sed -n '/1 \+2 \+3 \+4 \+5/,/6 \+7 \+8 \+9 \+10/{/#/d;p;}' " + HessOutputFile + " |grep -A 10000 'IR INTENSITY'|sed '1,2d'|sed -n -e :a -e '1,12!{P;N;D;};N;ba' | sed 's/.\{20\}//'|awk '{print $1}'"
 
     HessOri = os.popen(cmd).readlines()
     AdjustCoord = [ float(x) for x in HessOri]
