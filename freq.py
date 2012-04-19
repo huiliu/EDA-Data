@@ -11,7 +11,7 @@
     factor为经验因子，默认为2
 4. 注意原坐标来看计算HESSIAN的输入文件INP，请确认输入文件
     没有被修改
-
+5. Test File in ./test
 
 TODO:
     1. 检查HASSIAN计算文件是否有虚频
@@ -44,11 +44,14 @@ def NewOptCoordination(fname, factor):
     HessOutputFile = fname
     # May be have error when file name contained out
     HessInputFile = HessOutputFile.replace('out', 'inp')
-    cmd = "tail -20000 " + HessOutputFile + "|sed -n '/1           2           3           4           5/,/6           7           8           9          10/{/#/d;p;}' |sed '1,6d' |sed -n -e :a -e '1,12!{P;N;D;};N;ba' | sed 's/.*            //g'|awk '{print $2}'"
+    #cmd = "tail -20000 " + HessOutputFile + "|sed -n '/1           2           3           4           5/,/6           7           8           9          10/{/#/d;p;}' |sed '1,6d' |sed -n -e :a -e '1,12!{P;N;D;};N;ba' | sed 's/.*            //g'|awk '{print $2}'"
+
+    cmd = "tail -1000 " + HessOutputFile + "|sed -n '/1 \+2 \+3 \+4 \+5/,/6 \+7 \+8 \+9 \+10/{/#/d;p;}' porphyrin-na-cct-mp2-hess.out |grep -A 10000 'IR INTENSITY'|sed '1,2d'|sed -n -e :a -e '1,12!{P;N;D;};N;ba' | sed 's/.\{20\}//'|awk '{print $1}'"
+
     HessOri = os.popen(cmd).readlines()
     AdjustCoord = [ float(x) for x in HessOri]
 
-    cmd = "sed -rn '/C1/,/$(end)|(END)/{/#/d;p;}' " + HessInputFile + "|sed -e '1d' -e '$d'"
+    cmd = "sed -rn '/C1/,/$(end)|(END)/{/#/d;p;}' " + HessInputFile + "|sed -e '1d' -e '$d' |head -n " + str(int(len(AdjustCoord)/3))
     InitialCoordination = os.popen(cmd).readlines()
     InitCoor = []
     CoorTag = []
