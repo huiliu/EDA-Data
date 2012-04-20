@@ -4,6 +4,7 @@
 
 Now: Thu Apr 12 11:37:00 CST 2012
     analysis E(pol)
+    output E(pol) come from PCM directly
 
 TODO:
     analysis every orbital E(pol)
@@ -35,26 +36,52 @@ def ParseOption():
 
     return (i, argv[0])
 
+def main(FileName, iMethod):
+    """此函数用来计算EDA-PCM中由于PCM效应而使得E(pol)的变化值。
+        FileName        为使用EDA-PCM方法计算而等到的输出文件
+        iMethod         用于说明计算EDA-PCM时所使用的post-HF方法。
+                        目前计算测试使用过MP2, DFT。两种方法的
+                        输出略有不同，所以需要说明。:w
+    """
+
+    # 此Shell命令非常重要，用于提取输出文件对应部分，如果程序再现问题，应试
+    # 首先确认此处Shell取得了文件中对应的部分
+    # 测试文件位于test目录下。
+    cmd = "tail -1000 %s | sed -n '/(REPULSION ENERGY: T V X J CHANGE)/, \
+            /SUMMARY OF INTERACTION ENERGIES/{p;}' \
+        |sed '/\(^$\)\|\(^ (\)\|\(^ -\)\|\(^ S\)\|\(^  \)/d;'" % FileName
+
+    items = []
+    row = []
+
+    dpolarization = os.popen(cmd).readlines()
+
+    for line in dpolarization:
+        tvzjn = line.split()
+        items.append(tvzjn[1:3])
+    for i in range(iMethod):
+        diff = (float(items[i + iType][1]) - float(items[i][1])) * hartree
+        a = format(diff, precision)
+        print(str(a).rjust(charWidth), end="")
+        if i == (iMethod - 1) and iMethod == 6 :
+        # 暂时只能用于MP2计算结果
+            PolGas = sum(row)
+            PolPCM = format(diff - sum(row), precision).rjust(charWidth)
+            print(format(PolGas, precision).rjust(charWidth), PolPCM)
+        else:
+            row.append(diff)
 
 if __name__ == "__main__":
+
+    # 这三个变量是来操作数值精度和设定单位变换值的(hartree)
+    global hartree
+    global precision
+    global charWidth
 
     hartree = 627.510
     precision = ".5f"
     charWidth = 12
 
-
     iType, filename = ParseOption()
-    cmd = "tail -1000 %s | sed -n '/(REPULSION ENERGY: T V X J CHANGE)/, /SUMMARY OF INTERACTION ENERGIES/{p;}' |sed '/\(^$\)\|\(^ (\)\|\(^ -\)\|\(^ S\)\|\(^  \)/d;'" % filename
-    items = []
 
-    dpolarization = os.popen(cmd).readlines()
-    row = []
-
-    for line in dpolarization:
-        tvzjn = line.split()
-        items.append(tvzjn[1:3])
-    for i in range(iType):
-        diff = (float(items[i + iType][1]) - float(items[i][1])) * hartree
-        a = format(diff, precision)
-        print(str(a).rjust(charWidth), end="")
-    print()
+    main(filename, iType)
