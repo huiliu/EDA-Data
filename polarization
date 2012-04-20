@@ -39,18 +39,22 @@ def ParseOption():
 if __name__ == "__main__":
 
     hartree = 627.510
-    oformat = "{:.8}"
+    precision = ".5f"
+    charWidth = 12
+
+
     iType, filename = ParseOption()
     cmd = "tail -1000 %s | sed -n '/(REPULSION ENERGY: T V X J CHANGE)/, /SUMMARY OF INTERACTION ENERGIES/{p;}' |sed '/\(^$\)\|\(^ (\)\|\(^ -\)\|\(^ S\)\|\(^  \)/d;'" % filename
     items = []
 
     dpolarization = os.popen(cmd).readlines()
+    row = []
 
     for line in dpolarization:
         tvzjn = line.split()
         items.append(tvzjn[1:3])
     for i in range(iType):
         diff = (float(items[i + iType][1]) - float(items[i][1])) * hartree
-        a = oformat.format(diff)
-        print(str(a).rjust(15), end="")
+        a = format(diff, precision)
+        print(str(a).rjust(charWidth), end="")
     print()
