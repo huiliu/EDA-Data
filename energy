@@ -75,7 +75,7 @@ def printData(data):
     for i in data:
         #print( str(i).center(10), end=';' )
         #output csv file   
-        print( str(i), end=';' )
+        print( str(format(i, '.2f')), end=';' )
     print()
 
 
