@@ -79,7 +79,7 @@ if __name__ == "__main__":
     global charWidth
 
     hartree = 627.510
-    precision = ".5f"
+    precision = ".3f"
     charWidth = 12
 
     iType, filename = ParseOption()
