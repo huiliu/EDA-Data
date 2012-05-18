@@ -90,7 +90,7 @@ Del(){
             ssh -Y "$1" "rm -rfv $TMPDIR/$dir"
         else
             echo "Some program is using the file."
-            break
+            continue
         fi
     done
 }
