@@ -78,6 +78,8 @@ def main(FileName, iMethod):
     row = []
 
     dpolarization = os.popen(cmd).readlines()
+    if not dpolarization:
+        sys.exit(1)
 
     for line in dpolarization:
         tvzjn = line.split()
