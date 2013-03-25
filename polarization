@@ -116,7 +116,7 @@ if __name__ == "__main__":
     global DFT, MP2     # 用以区分MP2/DFT方法
 
     hartree = 627.510
-    precision = ".3f"
+    precision = ".2f"
     charWidth = 15
     DFT = 7
     MP2 = 6
