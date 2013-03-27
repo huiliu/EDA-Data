@@ -6,9 +6,9 @@
 if [ $(hostname) == "Pauling" ];then
     TMPDIR="/home/$(whoami)"
     NUMNODES=19
-elif [ $(hostname) == "Slater.ftcc" ];then
+elif [ $(hostname) == "ftcc.xmu.edu.cn" ];then
     TMPDIR="/state/partition1/$(whoami)"
-    NUMNODES=11
+    NUMNODES=19
 else
     echo "Please setup the tmp directory and the number of node"
     exit 1
