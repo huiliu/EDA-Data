@@ -1,0 +1,119 @@
+#!/bin/env python2
+# -*- coding: utf-8 -*-
+
+"""此程序用于移动两个原子（分子），使得它们之间的距离为指定值。
+输入文件要求为GAMESS的输入文件中的笛卡尔坐标形式，即每行由元素符号、原子序号和
+三个坐标值构成。如：
+
+    O      8.0           -1.24197039    0.05956397    0.00004857
+    H      1.0           -1.58602715   -0.41831472   -0.76101914
+    H      1.0           -1.58617149   -0.41831790    0.76105282
+    H      1.0            0.35800701    0.06806749   -0.00004160
+    O      8.0            1.31706636   -0.06749475   -0.00017697
+    H      1.0            1.68509821    0.81961597    0.00013632
+
+命令行参数说明：
+    假定我们要改变分子A，B的距离，以A中原子a1，B中原子b1为基准，我们固定A不动，
+    移动分子B。
+    -a n    为原子a1在坐标列表中的顺序
+    -b n    为原子b1在坐标列表中的顺序，特别规定：原子b1在坐标列表中的顺序必须
+            在分子B所有原子之前
+    -d f    a1和b1的期望距离
+
+输入文件示例:   ./h2o   # 上面的坐标
+"""
+import math
+import sys
+from optparse import OptionParser
+
+def GetCoordination(FileName):
+    """读取初始坐标数据。
+    注意这里对输入文件有一个潜在的规定：每行由五列组成，
+        第一列为元素符号
+        第二列为原子序号
+        第三列为X轴坐标
+        第四列为Y轴坐标
+        第五列为Z轴坐标
+    如果不满足这一要求，输出将会出现错误
+
+    PS: 可以增强以消除默认格式要求。
+    """
+    i = j = 0
+    data = open(FileName, 'r').readlines()
+    symbol = [line.split()[:-3] for line in data if line != "\n"]
+    data = [line.split()[-3:] for line in data if line != "\n"]
+    print symbol
+    for line in data:
+        j = 0
+        for value in line:
+            data[i][j] = float(value)
+            j += 1
+        i += 1
+    return (symbol, data)
+
+def Distance(A, B):
+    """计算空间两点A，B间的距离"""
+    return math.sqrt((A[0] - B[0])**2 + (A[1] - B[1])**2 + (A[2] - B[2])**2)
+
+def delta(A, B, distance):
+    """移动B以改变使得AB间的距离为distance
+
+        返回值为点B需要移动的偏移量
+    """
+
+    t = distance / Distance(A, B)
+
+    deltaX = (1-t)*A[0] + (t-1)*B[0]
+    deltaY = (1-t)*A[1] + (t-1)*B[1]
+    deltaZ = (1-t)*A[2] + (t-1)*B[2]
+
+    return (deltaX, deltaY, deltaZ)
+
+def Move(source, b, delta):
+    """从坐标列表source的第b项开始移动坐标，偏移值为delta
+    """
+    for line in source[options.b-1:]:
+        line[0] += delta[0]
+        line[1] += delta[1]
+        line[2] += delta[2]
+
+def output(data, flags=[]):
+    """输出数据的格式化有点烦
+    """
+    for symbol, line in zip(flags, data):
+        print "{0:<s}\t{1:<s}\t{2:>12.8f}\t{3:>12.8f}\t{4:>12.8f}".format(
+                                symbol[0], symbol[1], line[0], line[1], line[2])
+
+def parse():
+    """解析命令行参数
+    """
+
+    usage = "usage: %prog [options] arg"
+    parser = OptionParser(usage)
+    parser.add_option("-a", dest="a", action="store",
+                                                    type="int", help="A point")
+    parser.add_option("-b", dest="b", action="store",
+                                                    type="int", help="B point")
+    parser.add_option("-d", dest="d", action="store",
+                                            type="float", help="New distance")
+
+    return parser.parse_args()
+
+if __name__ == "__main__":
+    """此程序初始用于计算化学键的解离曲线上各点的分子（原子）坐标。
+    其实可以抽象为计算空间两点的距离，不过这两个点只能在初始位置构成的直线上移动。
+    """
+
+    (options, args) = parse()
+
+    if args == []:
+        print "\x1B[31m请输入坐标文件\x1B[0m"
+        sys.exit(1)
+
+    symbol, source = GetCoordination(args[0])
+    A = source[options.a-1]
+    B = source[options.b-1]
+
+    delta = delta(A, B, options.d)
+    Move(source, options.b, delta)
+    output(source, symbol)
